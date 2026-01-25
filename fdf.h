@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/01/22 19:26:08 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/01/25 20:33:49 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 # define IMG_SIZE_X	480
 # define IMG_SIZE_Y	360
 # define TITLE		"EAT MY SHORTS"
-# include "/libft/libft.h"
+# include "libft/libft.h"
+# include "libft/ft_printf.h"
+# include "libft/get_next_line.h"
 
 typedef struct s_mlx_data
 {
@@ -37,5 +39,12 @@ typedef struct s_point
 	int	z;
 }		t_point;
 
-int	parse(const char *path);
+typedef struct s_map
+{
+	int	height;
+	int	width;
+}		t_map;
+
+t_map parse(const char *path, t_point ***point);
+
 #endif

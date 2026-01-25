@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 13:24:58 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/22 18:18:38 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/01/25 15:49:53 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
+# include "libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -30,7 +31,6 @@ typedef struct s_stash
 char	*get_next_line(int fd);
 
 //	string utils
-ssize_t	ft_indchr(const char *s, int c);
 char	*ft_join(char *nl_buf, size_t *nl_len, t_stash *fd_buf, size_t to_cpy);
 int		ft_make_next_line(char **next_line, size_t *nl_len, t_stash *buffer);
 

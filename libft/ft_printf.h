@@ -6,13 +6,13 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:39:27 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 17:55:31 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/01/25 15:46:25 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
-# include "libft/libft.h"
+# include "libft.h"
 # include <stdarg.h>
 
 //(1 << 0) // bits for '-': 00000001 =  1
@@ -62,7 +62,6 @@ int			ft_put_nbr_base(unsigned long n, const char *base);
 int			ft_recurse(unsigned long n, const char *base,
 				unsigned long base_len, int i);
 int			ft_putchar(int c);
-ssize_t		ft_indchr(const char *s, int c);
 int			ft_get_nbr(const char **s);
 int			ft_abs_nbr_len(unsigned long n, unsigned long base);
 int			ft_form_spec_handler(t_form_spec *data, int flag, const char **s,

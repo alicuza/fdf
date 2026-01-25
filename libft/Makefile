@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/01/22 20:22:17 by sancuta          ###   ########.fr        #
+#    Updated: 2026/01/25 16:56:48 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRCS =	ft_isalpha.c \
 		ft_tolower.c \
 		ft_strchr.c \
 		ft_strrchr.c \
+		ft_indchr.c \
 		ft_strncmp.c \
 		ft_memchr.c \
 		ft_memcmp.c \
@@ -85,6 +86,9 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+debug: CFLAGS += -g
+debug: fclean all
+
+.PHONY: all clean fclean re debug
 
 -include $(DEPS)

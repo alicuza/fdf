@@ -6,29 +6,11 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:48:25 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/23 16:29:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/01/25 15:47:07 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-ssize_t	ft_indchr(const char *s, int c)
-{
-	ssize_t	i;
-
-	if (!s)
-		return (-1);
-	i = 0;
-	while (s[i])
-	{
-		if ((unsigned char)s[i] == (unsigned char)c)
-			return (i);
-		i++;
-	}
-	if ((unsigned char)s[i] == (unsigned char)c)
-		return (i);
-	return (-1);
-}
 
 t_stash	*ft_bufnew(int fd)
 {

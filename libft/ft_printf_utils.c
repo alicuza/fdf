@@ -6,29 +6,11 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 06:04:49 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/01/25 15:47:12 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-ssize_t	ft_indchr(const char *s, int c)
-{
-	ssize_t	i;
-
-	if (!s)
-		return (-1);
-	i = 0;
-	while (s[i])
-	{
-		if ((unsigned char)s[i] == (unsigned char)c)
-			return (i);
-		i++;
-	}
-	if ((unsigned char)s[i] == (unsigned char)c)
-		return (i);
-	return (-1);
-}
 
 int	ft_get_nbr(const char **s)
 {
