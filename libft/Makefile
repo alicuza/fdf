@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/01/25 16:56:48 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/02 11:37:25 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,18 +76,18 @@ DEPS = $(SRCS:.c=.d)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		ar $(ARFLAGS) $@ $?
+	ar $(ARFLAGS) $@ $^
 
 clean:
-		rm -f $(OBJS) $(DEPS)
+	rm -f $(OBJS) $(DEPS)
 
 fclean: clean
-		rm -f $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
 debug: CFLAGS += -g
-debug: fclean all
+debug: re
 
 .PHONY: all clean fclean re debug
 
