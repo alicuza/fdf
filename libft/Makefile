@@ -6,13 +6,13 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/02 11:37:25 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/03 00:55:24 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-CC = cc
-CFLAGS = -MMD -MP -Wall -Wextra -Werror
+CC ?= cc
+CFLAGS ?= -MMD -MP -Wall -Wextra -Werror
 ARFLAGS = -rcs
 SRCS =	ft_isalpha.c \
 		ft_isdigit.c \
@@ -73,7 +73,11 @@ SRCS =	ft_isalpha.c \
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 
-all: $(NAME)
+all: .release $(NAME)
+
+.release:
+	if [ -f .debug ]; then $(MAKE) fclean; fi
+	touch .release
 
 $(NAME): $(OBJS)
 	ar $(ARFLAGS) $@ $^
@@ -82,12 +86,16 @@ clean:
 	rm -f $(OBJS) $(DEPS)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) .debug .release
 
 re: fclean all
 
 debug: CFLAGS += -g
-debug: re
+debug: .debug $(NAME)
+
+.debug:
+	if [ -f .release ]; then $(MAKE) fclean; fi
+	touch .debug
 
 .PHONY: all clean fclean re debug
 
