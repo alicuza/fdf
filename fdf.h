@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/01/25 20:33:49 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/03 13:11:47 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,23 @@
 # include "libft/ft_printf.h"
 # include "libft/get_next_line.h"
 
+typedef struct s_img_data
+{
+	void	*bg_ptr;
+	void	*fg_ptr;
+	char	*bg_buf;
+	char	*fg_buf;
+}			t_img_data;
+
 typedef struct s_mlx_data
 {
-	void	*mlx_ptr;
-	void	*img_ptr;
-	void	*win_ptr;
-	char	*img_buffer;
-	int		bits_per_pixel;
-	int		size_line;
-	int		endian;
-}			t_mlx_data;
+	t_img_data	images;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			bits_per_pixel;
+	int			size_line;
+	int			endian;
+}				t_mlx_data;
 
 typedef struct s_point
 {
