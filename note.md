@@ -1,6 +1,7 @@
 # Makefile
 
-handling different release types, like having a `make debug` command, needs some additional work, like having .dotfiles that track which release type currently exists and handle it without relinking unnecessarily.
+- handling different release types, like having a `make debug` command, needs some additional work, like having .dotfiles that track which release type currently exists and handle it without relinking unnecessarily.
+- Felix had the idea of using an environment variable instead of the .dotfiles. But how would an env var retain information from the last compilation to know whether it needs to fclean first or not.
 
 # fdf
 ## Inspiration
