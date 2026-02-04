@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/03 00:52:44 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/04 20:23:48 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
 LIBS = -Llibft -lft -lmlx -lXext -lX11
 SRCS =	create_window.c \
-		parser.c
+		parser.c \
+		draw.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 
