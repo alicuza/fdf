@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 15:16:52 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/04 20:30:08 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/05 18:09:32 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	main(int argc, char **argv)
 		mlx_data.images.bg_ptr, (WIN_SIZE_X - IMG_SIZE_X) / 2,
 		(WIN_SIZE_Y - IMG_SIZE_Y) / 2);
 	map = parse(argv[1], &p);
+	printf("map w=%d h=%d scalar=(%f,%f)\n",
+			map.dimension.width, map.dimension.height, map.scalar.x, map.scalar.y);
 	img_offset_x = (WIN_SIZE_X - IMG_SIZE_X) / 2.0;
 	img_offset_y = (WIN_SIZE_Y - IMG_SIZE_Y) / 2.0;
 	i = 0;
@@ -62,11 +64,11 @@ int	main(int argc, char **argv)
 		j = 0;
 		while (j < map.dimension.width)
 		{
-			p[i][j].pix.x = img_offset_x + j * map.scalar.x;
-			p[i][j].pix.y = img_offset_y + i * map.scalar.y;
-			pix_index = i * map.dimension.width + j;
-			mlx_pixel_put(mlx_data.mlx_ptr, mlx_data.win_ptr,
-					p[i][j].pix.x, p[i][j].pix.y, 0xFFFFFF);
+			p[i][j].pix.x = (p[i][j].map.x - p[i][j].map.z) * (sqrt(3) / 3) * map.scalar.x;
+			p[i][j].pix.y = (p[i][j].map.y + ((p[i][j].map.x + p[i][j].map.z) * sqrt(6) / 6)) * map.scalar.y;
+			pix_index = (int)p[i][j].pix.y * mlx_data.size_line + (int)p[i][j].pix.x * mlx_data.bits_per_pixel / 8;
+			if (p[i][j].pix.x >= 0 && p[i][j].pix.x < IMG_SIZE_X && p[i][j].pix.y >= 0 && p[i][j].pix.y < IMG_SIZE_Y)
+				*(unsigned int *)(mlx_data.images.bg_buf + pix_index) = 0x00ffffff;
 			ft_printf("P[%03d] = (%2d, %2d, %2d) at position (%3d, %3d)\n",
 					pix_index, p[i][j].map.x, p[i][j].map.y, p[i][j].map.z,
 					p[i][j].pix.x, p[i][j].pix.y);
@@ -74,7 +76,10 @@ int	main(int argc, char **argv)
 		}
 		i++;
 	}
-	draw_lines_from_point(&mlx_data, p, map);
+	draw_lines(&mlx_data, p, map);
+	mlx_put_image_to_window(mlx_data.mlx_ptr, mlx_data.win_ptr,
+		mlx_data.images.bg_ptr, (WIN_SIZE_X - IMG_SIZE_X) / 2,
+		(WIN_SIZE_Y - IMG_SIZE_Y) / 2);
 //	free_points(&p, map);
 	mlx_key_hook(mlx_data.win_ptr, handle_key_press, &mlx_data);
 	mlx_hook(mlx_data.win_ptr, 33, 1L<<17, clean_exit, &mlx_data);

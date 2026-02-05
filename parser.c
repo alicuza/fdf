@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:18:31 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/04 19:15:44 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/05 18:04:41 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_map parse(const char *path, t_point ***p)
 	fd = open(path, O_RDONLY);
 	cur_line = get_next_line(fd);
 	ret.dimension.height = arr_height(path);
-	*p = malloc((ret.dimension.height + 2) * sizeof(t_point *)); // can't remember why +2. +1 might be enough
+	*p = malloc((ret.dimension.height + 1) * sizeof(t_point *)); // can't remember why +2. +1 might be enough
 	if (!(*p))
 	{
 		perror("t_point **parse, malloc failure");
@@ -58,13 +58,12 @@ t_map parse(const char *path, t_point ***p)
 		while (split_line[j])
 		{
 			(*p)[i][j].map.x = j;
-			(*p)[i][j].pix.x = j; // TODO now
 			(*p)[i][j].map.y = i;
 			(*p)[i][j].map.z = ft_atoi(split_line[j]);
 			j++;
 		}
-		ret.scalar.x = (double)IMG_SIZE_X / (ret.dimension.width - 1.0);
-		ret.scalar.y = (double)IMG_SIZE_Y / (ret.dimension.height - 1.0);
+		ret.scalar.x = (double)(IMG_SIZE_X - 1.0) / (ret.dimension.width - 1.0) * 0.5;
+		ret.scalar.y = (double)(IMG_SIZE_Y - 1.0) / (ret.dimension.height - 1.0) * 0.5;
 		cur_line = get_next_line(fd);
 		i++;
 	}

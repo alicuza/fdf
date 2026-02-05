@@ -6,14 +6,14 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/04 20:23:48 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/05 17:12:58 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
-LIBS = -Llibft -lft -lmlx -lXext -lX11
+LIBS = -Llibft -lft -lmlx -lXext -lX11 -lm
 SRCS =	create_window.c \
 		parser.c \
 		draw.c
