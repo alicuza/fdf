@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 15:16:52 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/05 18:09:32 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/06 11:50:09 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,11 @@ int	main(int argc, char **argv)
 		j = 0;
 		while (j < map.dimension.width)
 		{
-			p[i][j].pix.x = (p[i][j].map.x - p[i][j].map.z) * (sqrt(3) / 3) * map.scalar.x;
-			p[i][j].pix.y = (p[i][j].map.y + ((p[i][j].map.x + p[i][j].map.z) * sqrt(6) / 6)) * map.scalar.y;
+			p[i][j].pix.x = (0.5 + p[i][j].map.x - p[i][j].map.z) * (sqrt(3) / 3) * map.scalar.x;
+			p[i][j].pix.y = (0.5 + p[i][j].map.y + ((p[i][j].map.x + p[i][j].map.z) * sqrt(6) / 6)) * map.scalar.y;
 			pix_index = (int)p[i][j].pix.y * mlx_data.size_line + (int)p[i][j].pix.x * mlx_data.bits_per_pixel / 8;
 			if (p[i][j].pix.x >= 0 && p[i][j].pix.x < IMG_SIZE_X && p[i][j].pix.y >= 0 && p[i][j].pix.y < IMG_SIZE_Y)
 				*(unsigned int *)(mlx_data.images.bg_buf + pix_index) = 0x00ffffff;
-			ft_printf("P[%03d] = (%2d, %2d, %2d) at position (%3d, %3d)\n",
-					pix_index, p[i][j].map.x, p[i][j].map.y, p[i][j].map.z,
-					p[i][j].pix.x, p[i][j].pix.y);
 			j++;
 		}
 		i++;
