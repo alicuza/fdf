@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/05 17:45:18 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/08 22:56:25 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,68 +26,80 @@
 # include <math.h>
 # include <mlx.h>
 
-typedef struct s_img_data
-{
-	void	*bg_ptr;
-	void	*fg_ptr;
-	char	*bg_buf;
-	char	*fg_buf;
-}	t_img_data;
-
-typedef struct s_mlx_data
-{
-	t_img_data	images;
-	void		*mlx_ptr;
-	void		*win_ptr;
-	int			bits_per_pixel;
-	int			size_line;
-	int			endian;
-}	t_mlx_data;
-
-typedef struct s_dim2
+typedef struct s_dim2d
 {
 	int	height;
 	int	width;
-}	t_dim2;
+}	t_dim2d;
 
-typedef struct s_dim3
+typedef struct s_dim3d
 {
 	int	height;
 	int	width;
 	int	depth;
-}	t_dim3;
+}	t_dim3d;
 
-typedef struct s_vector2
+typedef struct s_vec2d
 {
 	int	x;
 	int	y;
-}	t_vector2;
+}	t_vec2d;
 
-typedef struct s_fvector2
+typedef struct s_fvec2d
 {
 	double	x;
 	double	y;
-}	t_fvector2;
+}	t_fvec2d;
 
-typedef struct s_vector3
+typedef struct s_vec3d
 {
 	int	x;
 	int	y;
 	int	z;
-}	t_vector3;
+}	t_vec3d;
+
+typedef struct s_fvec3d
+{
+	double	x;
+	double	y;
+	double	z;
+}	t_fvec3d;
 
 typedef struct s_point
 {
-	t_vector3	map;
-	t_vector2	pix;
+	t_fvec3d	world;
+	t_fvec2d	screen;
+	t_vec3d		map;
 }	t_point;
+
+typedef struct s_img_data
+{
+	t_dim2d	dim;
+	void	*ptr;
+	char	*buf;
+	int		bits_per_pixel;
+	int		size_line;
+	int		endian;
+	int		offset_from_win;
+}	t_img_data;
+
+typedef struct s_win_data
+{
+	t_dim2d	dim;
+	void	*ptr;
+}	t_win_data;
+
+typedef struct s_mlx_data
+{
+	t_img_data	img;
+	t_win_data	win;
+	void		*ptr;
+}	t_mlx_data;
 
 typedef struct s_map
 {
-	t_dim2		dimension;
-	t_fvector2	scalar;
+	t_dim2d	dimension;
 }	t_map;
 
-t_map	parse(const char *path, t_point ***point);
-int		draw_lines(t_mlx_data *data, t_point **p, t_map map);
+void prep_drawing(t_mlx_data *data);
 #endif
