@@ -259,3 +259,6 @@ tmux show -gp    # pane options
 ## Commands
 `n_gt`: go to next tab
 `n_gT`: go to previous tab
+
+# scan-build
+better compiler options.
