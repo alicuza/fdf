@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/05 17:12:58 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/09 20:41:07 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,10 @@ NAME = fdf
 CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
 LIBS = -Llibft -lft -lmlx -lXext -lX11 -lm
-SRCS =	create_window.c \
-		parser.c \
-		draw.c
+SRCS =	main.c \
+		get_map_dimensions.c \
+		parsing.c \
+		error_handling.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 

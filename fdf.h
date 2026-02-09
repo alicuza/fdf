@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/08 22:56:25 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/09 20:37:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,16 @@
 # define WIN_SIZE_Y 480
 # define IMG_SIZE_X 480
 # define IMG_SIZE_Y 360
-# define TITLE "EAT MY SHORTS"
+# define TITLE "sancuta's magical fildefer"
 # include "libft/libft.h"
 # include "libft/ft_printf.h"
 # include "libft/get_next_line.h"
+# include <errno.h>
 # include <fcntl.h>
-# include <stdlib.h>
-# include <stdio.h>
 # include <math.h>
 # include <mlx.h>
+# include <stdlib.h>
+# include <stdio.h>
 
 typedef struct s_dim2d
 {
@@ -89,17 +90,20 @@ typedef struct s_win_data
 	void	*ptr;
 }	t_win_data;
 
-typedef struct s_mlx_data
+typedef struct s_map_data
+{
+	t_dim2d	dim;
+	size_t	size;
+}	t_map_data;
+
+typedef struct s_state_data
 {
 	t_img_data	img;
 	t_win_data	win;
-	void		*ptr;
-}	t_mlx_data;
-
-typedef struct s_map
-{
-	t_dim2d	dimension;
-}	t_map;
-
-void prep_drawing(t_mlx_data *data);
+	t_map_data	map;
+	t_point		*p;
+	void		*mlx_ptr;
+	char		*path;
+	int			fd;
+}	t_state_data;
 #endif
