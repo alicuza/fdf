@@ -265,4 +265,26 @@ tmux show -gp    # pane options
 `n_gT`: go to previous tab
 
 # scan-build
-better compiler options.
+check it for better compiler flags and checks.
+
+# grep
+## flags
+`-E` - extended REGEX?
+
+`-n` - line number
+`-r` - recursive
+`-v` - reverse match
+`-w` - word match
+
+# shell hooks
+
+```zsh
+preexec() {
+  local display_cmd="${(j. .)${${(z)1}:t}}"
+  printf '\033]2;%s\033\\' "${display_cmd}"
+}
+
+precmd() {
+  printf '\033]2;%s\033\\' "${PWD/#$HOME/~}"
+}
+```
