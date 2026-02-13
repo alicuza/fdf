@@ -23,6 +23,10 @@
 ## MLX
 - is a wrapper for the X11 and Xext API
 
+### Behaviour
+- the `mlx_ptr` needs to be freed, the `mlx_destroy_display(mlx_ptr)` needs to be called - not documented properly in the man pages.
+- the hook needed for closing the display by clicking on the x is not documented in the man page. `mlx_hook` exists as a generic hook, which takes X11 Event(Type)s and Masks.
+
 ### X11 Events
 The common Types are bold and have the corresponding code in brackets:
 
@@ -118,7 +122,7 @@ Taken from `/usr/include/X11/X.h`
 #define LASTEvent			36	/* must be bigger than any event # */
 ```
 
-#### Mappings of Keyboard and Mouse Events
+### Mappings of Keyboard and Mouse Events
 full list in `/usr/include/X11/keysymdef.h`
 
 **common keys:**
