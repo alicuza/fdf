@@ -7,13 +7,18 @@
 [https://github.com/ailopez-o/42Barcelona-FdF](this mofo projects to a globe)
 
 ## TODO
-- error handling in fucking general.
-- cleanup function.
-- go through comments, fix issues, clean up code
+- ~~error handling in fucking general.~~ need to write up my solution
+- ~~cleanup function.~~
+- ~~go through comments, fix issues, clean up code~~ completely refactor for norm compliance and sane architecture.
 - figure out what types your dimensions need to use, `int`, `unsigned int` and then maybe the types from `stdint.h`
+- write README
 
 ## Optimization
 - don't calculate transformations for points that do not appear on the screen and who have no edge starting or ending with them that do not appear on the screen. If you don't need them for drawing, you don't need to calculate their transformations, and since all different positions of the point are saved together in a struct for each point, I can always check whether a neighbor is visible on the screen.
+
+## Code Structure && Error Handling
+- one cleanup function that frees allocated memory tracked in the state struct.
+- functions mostly don't return anything, but modify the tracked variables in the state struct, which is passed by reference almost everywhere (especially where a failure can happen that I do not control, ex: system calls, libft stuff, like `get_next_line()` or `ft_split()`)
 
 ## MLX
 - is a wrapper for the X11 and Xext API
