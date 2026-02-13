@@ -52,7 +52,6 @@ void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 	if (state->fd != -1)
 		close(state->fd);
 	free(state->gnl_line);
-	free(state);
 	if (exit_status == EXIT_FAILURE)
 		perror(caller);
 	exit(exit_status);
