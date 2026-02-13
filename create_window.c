@@ -40,9 +40,9 @@ int	main(int argc, char **argv)
 	mlx_data.images.fg_ptr = mlx_new_image(mlx_data.mlx_ptr, IMG_SIZE_X,
 			IMG_SIZE_Y);
 	mlx_data.images.bg_buf = mlx_get_data_addr(mlx_data.images.bg_ptr,
-			&mlx_data.bits_per_pixel, &mlx_data.size_line, &mlx_data.endian);
+			&mlx_data.bits_ppix, &mlx_data.size_line, &mlx_data.endian);
 	mlx_data.images.fg_buf = mlx_get_data_addr(mlx_data.images.fg_ptr,
-			&mlx_data.bits_per_pixel, &mlx_data.size_line, &mlx_data.endian);
+			&mlx_data.bits_ppix, &mlx_data.size_line, &mlx_data.endian);
 	i = 0;
 	pixels = IMG_SIZE_X * IMG_SIZE_Y;
 	while (i < pixels)
@@ -66,7 +66,7 @@ int	main(int argc, char **argv)
 		{
 			p[i][j].pix.x = (0.5 + p[i][j].map.x - p[i][j].map.z) * (sqrt(3) / 3) * map.scalar.x;
 			p[i][j].pix.y = (0.5 + p[i][j].map.y + ((p[i][j].map.x + p[i][j].map.z) * sqrt(6) / 6)) * map.scalar.y;
-			pix_index = (int)p[i][j].pix.y * mlx_data.size_line + (int)p[i][j].pix.x * mlx_data.bits_per_pixel / 8;
+			pix_index = (int)p[i][j].pix.y * mlx_data.size_line + (int)p[i][j].pix.x * mlx_data.bits_ppix / 8;
 			if (p[i][j].pix.x >= 0 && p[i][j].pix.x < IMG_SIZE_X && p[i][j].pix.y >= 0 && p[i][j].pix.y < IMG_SIZE_Y)
 				*(unsigned int *)(mlx_data.images.bg_buf + pix_index) = 0x00ffffff;
 			j++;

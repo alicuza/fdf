@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:06:09 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/09 21:07:50 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/13 15:43:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	arr_len(char **str_arr)
 	return (i);
 }
 
-static void	arr_dim(t_state *state, char *line)
+static void	arr_dim(t_state_data *state, char *line)
 {
 	char	**split_line;
 
@@ -39,25 +39,27 @@ static void	arr_dim(t_state *state, char *line)
 	free_str_arr(&split_line);
 }
 
-void	get_map_dim(t_state *state)
+void	get_map_dim(t_state_data *state)
 {
 	char	*cur_line;
 
 	state->fd = open(state->path, O_RDONLY);
 	if (state->fd == -1)
 		handle_exit(state, EXIT_FAILURE, "get_map_dim");
-	errno = 0;
-	cur_line = get_next_line(state->fd);
-	if (!cur_line && errno != 0)
-		handle_exit(state, EXIT_FAILURE, "get_map_dim");
-	while (cur_line)
+	while (1)
 	{
-		arr_dim(state, cur_line);
-		free_str(&cur_line);
 		errno = 0;
 		cur_line = get_next_line(state->fd);
-		if (!cur_line && errno != 0)
-			handle_exit(state, EXIT_FAILURE, "get_map_dim");
+		if (!cur_line)
+		{
+			if (errno)
+				handle_exit(state, EXIT_FAILURE, "get_map_dim");
+			break;
+		}
+		arr_dim(state, cur_line);
+		free_str(&cur_line);
 	}
 	close(state->fd);
+	state->fd = -1;
+	state->map.size = state->map.dim.width * state->map.dim.height;
 }

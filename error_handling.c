@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:05:02 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/09 21:13:51 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/13 16:00:04 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,28 @@ void	free_str_arr(char ***str_arr)
 	*str_arr = NULL;
 }
 
-void	handle_exit(t_state *state, int exit_status, const char *caller)
+void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 {
-	// mlx destroy functions
-	// free everything allocated
-	// close open fd
-	// exit with message of where it failed
+	if (state->img.ptr)
+		mlx_destroy_image (state->mlx_ptr, state->img.ptr);
+	if (state->win.ptr)
+		mlx_destroy_window(state->mlx_ptr, state->win.ptr);
+	if (state->mlx_ptr)
+		mlx_destroy_display(state->mlx_ptr);
+	free(state->mlx_ptr);
+	free(state->p.model.x);
+	free(state->p.model.y);
+	free(state->p.model.z);
+	free(state->p.world.x);
+	free(state->p.world.y);
+	free(state->p.world.z);
+	free(state->p.screen.x);
+	free(state->p.screen.y);
+	if (state->fd != -1)
+		close(state->fd);
+	free(state->gnl_line);
+	free(state);
+	if (exit_status == EXIT_FAILURE)
+		perror(caller);
+	exit(exit_status);
 }

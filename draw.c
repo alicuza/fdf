@@ -89,7 +89,7 @@ int	draw_line(t_mlx_data *data, t_point p1, t_point p2)
 	loop_count = 0;
 	while (j * sign_x <= p2.pix.x * sign_x)
 	{
-		pix_index = (int)i * data->size_line + (int)j * (data->bits_per_pixel / 8);
+		pix_index = (int)i * data->size_line + (int)j * (data->bits_ppix / 8);
 		if (j >= 0 && j < IMG_SIZE_X && i >= 0 && i < IMG_SIZE_Y)
 			*(unsigned int *)(data->images.bg_buf + pix_index) = 0x00ffffff;
 		j += step_size;
@@ -108,7 +108,7 @@ int	draw_vertical_line(t_mlx_data *data, t_point p1, t_point p2, int sign_y)
 	j = p1.pix.y;
 	while (j * sign_y < p2.pix.y * sign_y)
 	{
-		pix_index = (int)j * data->size_line + (int)p1.pix.x * (data->bits_per_pixel / 8);
+		pix_index = (int)j * data->size_line + (int)p1.pix.x * (data->bits_ppix / 8);
 		if(p1.pix.x >= 0 && p1.pix.x < IMG_SIZE_X && j >= 0 && j < IMG_SIZE_Y)
 			*(unsigned int *)(data->images.bg_buf + pix_index) = 0x00ffffff;
 		j += sign_y;
@@ -124,7 +124,7 @@ int	draw_horizontal_line(t_mlx_data *data, t_point p1, t_point p2, int sign_x)
 	i = p1.pix.x;
 	while (i * sign_x < p2.pix.x * sign_x)
 	{
-		pix_index = (int)p1.pix.y * data->size_line + (int)i * (data->bits_per_pixel / 8);
+		pix_index = (int)p1.pix.y * data->size_line + (int)i * (data->bits_ppix / 8);
 		if(i >= 0 && i < IMG_SIZE_X && p1.pix.y >= 0 && p1.pix.y < IMG_SIZE_Y)
 			*(unsigned int *)(data->images.bg_buf + pix_index) = 0x00ffffff;
 		i += sign_x;

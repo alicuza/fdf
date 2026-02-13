@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/10 12:26:05 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/13 10:40:23 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,52 +33,32 @@ typedef struct s_dim2d
 	int	width;
 }	t_dim2d;
 
-typedef struct s_dim3d
+typedef struct s_fvec2d_arr
 {
-	int	height;
-	int	width;
-	int	depth;
-}	t_dim3d;
+	double	*x;
+	double	*y;
+}	t_fvec2d_arr;
 
-typedef struct s_vec2d
+typedef struct s_fvec3d_arr
 {
-	int	x;
-	int	y;
-}	t_vec2d;
+	double	*x;
+	double	*y;
+	double	*z;
+}	t_fvec3d_arr;
 
-typedef struct s_fvec2d
+typedef struct s_pnt_data
 {
-	double	x;
-	double	y;
-}	t_fvec2d;
-
-typedef struct s_vec3d
-{
-	int	x;
-	int	y;
-	int	z;
-}	t_vec3d;
-
-typedef struct s_fvec3d
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_fvec3d;
-
-typedef struct s_point
-{
-	t_fvec3d	world;
-	t_fvec2d	screen;
-	t_vec3d		map;
-}	t_point;
+	t_fvec3d_arr	model;
+	t_fvec3d_arr	world;
+	t_fvec2d_arr	screen;
+}	t_pnt_data;
 
 typedef struct s_img_data
 {
 	t_dim2d	dim;
 	void	*ptr;
 	char	*buf;
-	int		bits_per_pixel;
+	int		bits_ppix;
 	int		size_line;
 	int		endian;
 	int		offset_from_win;
@@ -101,9 +81,10 @@ typedef struct s_state_data
 	t_img_data	img;
 	t_win_data	win;
 	t_map_data	map;
-	t_point		*p;
+	t_pnt_data	p;
 	void		*mlx_ptr;
 	char		*path;
+	char		*gnl_line;
 	int			fd;
 }	t_state_data;
 #endif

@@ -6,17 +6,24 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/09 20:43:40 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/13 15:55:20 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+/*
+	for initialization I could use ft_memset(state, 0, sizeof(t_state_data));
+	fd = -1, to be able to check if fd is open when doing cleanup.
+*/
+
 static void	init_state(t_state_data *state, char *path)
 {
+	*state = (t_state_data){0};
+	state->fd = -1;
 	state->win.dim = (t_dim2d){WIN_SIZE_X, WIN_SIZE_Y};
 	state->img.dim = (t_dim2d){IMG_SIZE_X, IMG_SIZE_Y};
-	state->path = ft_strdup(path);
+	state->path = path;
 	if (!state->path)
 		handle_exit(state, EXIT_FAILURE, "prep_drawing");
 	state->mlx_ptr = mlx_init();
@@ -30,7 +37,7 @@ static void	init_state(t_state_data *state, char *path)
 						state->img.dim.width, state->img.dim.height);
 	if (!state->img.ptr)
 		handle_exit(state, EXIT_FAILURE, "prep_drawing");
-	state->img.buf = mlx_get_data_addr(state->img.ptr, &state->img.bits_per_pixel,
+	state->img.buf = mlx_get_data_addr(state->img.ptr, &state->img.bits_ppix,
 						&state->img.size_line, &state->img.endian);
 	if (!state->img.buf)
 		handle_exit(state, EXIT_FAILURE, "prep_drawing");

@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void rotate_points(t_state *state)
+void rotate_points(t_state_data *state)
 {
 	
 }
