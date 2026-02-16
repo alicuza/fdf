@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:05:02 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/13 16:00:04 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 18:35:05 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 	if (state->fd != -1)
 		close(state->fd);
 	free(state->gnl_line);
+	get_next_line(-255);
 	if (exit_status == EXIT_FAILURE)
 		perror(caller);
 	exit(exit_status);

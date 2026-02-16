@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:34:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 13:37:30 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 22:01:26 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_mat4	mat4_id(void)
 {
-	t_mat4	res;
+	t_mat4	res[16];
 
 	res.pos[0] = 1.0;
 	res.pos[1] = 0.0;
@@ -65,14 +65,23 @@ t_mat4	mat4_mult(t_mat4 m1, t_mat4 m2)
 	return (res);
 }
 
-t_fvec3d	point_trs_mult(t_fvec3d p, t_mat4 m)
+t_fvec3d_arr	point_trs_mult_arr(t_fvec3d_arr *p, size_t len, t_mat4 m)
 {
-	t_fvec3d	res;
-
-	res.x = p.x * m.pos[0] + p.y * m.pos[1] + p.z * m.pos[2] + m.pos[3];
-	res.y = p.x * m.pos[4] + p.y * m.pos[5] + p.z * m.pos[6] + m.pos[7];
-	res.z = p.x * m.pos[8] + p.y * m.pos[9] + p.z * m.pos[10] + m.pos[11];
-	return (res);
+	size_t		i;
+	t_fvec3d	tmp;
+	
+	i = 0;
+	while (i < len)
+	{
+		tmp.x = p->x[i] * m.pos[0] + p->y[i] * m.pos[1] + p->z[i] * m.pos[2] + m.pos[3];
+		tmp.y = p->x[i] * m.pos[4] + p->y[i] * m.pos[5] + p->z[i] * m.pos[6] + m.pos[7];
+		tmp.z = p->x[i] * m.pos[8] + p->y[i] * m.pos[9] + p->z[i] * m.pos[10] + m.pos[11];
+		p->x[i] = tmp.x;
+		p->y[i] = tmp.y;
+		p->z[i] = tmp.z;
+		i++;
+	}
+	return (*p);
 }
 
 t_quat	quat_mult(t_quat q1, t_quat q2)
@@ -117,6 +126,34 @@ t_fvec3d	vec_norm(t_fvec3d v)
 	return (res);
 }
 
+t_fvec3d_arr	vec_arr_norm(t_fvec3d_arr v, size_t len)
+{
+	double			mag;
+	double			mag_max;
+	size_t			i;
+
+	mag_max = 0.0;
+	i = 0;
+	while (i < len)
+	{
+		mag = sqrt(v.x[i] * v.x[i] + v.y[i] * v.y[i] + v.z[i] * v.z[i]);
+		if (mag > mag_max)
+			mag_max = mag;
+		i++;
+	}
+	if (mag_max <= FLT_EPSILON) // if not enough, try DBL_EPSILON
+		return (v);
+	i = 0;
+	while (i < len)
+	{
+		v.x[i] /= mag_max;
+		v.y[i] /= mag_max;
+		v.z[i] /= mag_max;
+		i++;
+	}
+	return (v);
+}
+
 t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
 {
 	t_mat4	res;
@@ -126,17 +163,14 @@ t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
 	res.pos[1] = (2.0 * (q.x * q.y - q.z * q.w)) * scale;
 	res.pos[2] = (2.0 * (q.x * q.z + q.y * q.w)) * scale;
 	res.pos[3] = transform.x;
-
 	res.pos[4] = (2.0 * (q.x * q.y + q.z * q.w)) * scale;
 	res.pos[5] = (1.0 - 2.0 * (q.x * q.x + q.z * q.z)) * scale;
 	res.pos[6] = (2.0 * (q.y * q.z - q.x * q.w)) * scale;
 	res.pos[7] = transform.y;
-
 	res.pos[8] = (2.0 * (q.x * q.z - q.y * q.w)) * scale;
 	res.pos[9] = (2.0 * (q.y * q.z + q.x * q.w)) * scale;
 	res.pos[10] = (1.0 - 2.0 * (q.x * q.x + q.y * q.y)) * scale;
 	res.pos[11] = transform.z;
-
 	res.pos[12] = 0.0;
 	res.pos[13] = 0.0;
 	res.pos[14] = 0.0;
@@ -146,12 +180,12 @@ t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
 
 double	deg_to_rad(double deg)
 {
-	return (deg * (M_PI / 180));
+	return (fmod(deg, 360.0) * (M_PI / 180.0)); // precompute M_PI/180 or are there any macros?
 }
 
 double	rad_to_deg(double rad)
 {
-	return (rad * (180 / M_PI));
+	return (fmod(rad, (2.0 * M_PI)) * (180.0 / M_PI)); // precompute 2*M_PI and 180/M_PI or are there any macros?
 }
 
 t_quat	quat_from_aa(double rad, t_fvec3d axis)
@@ -168,5 +202,3 @@ t_quat	quat_from_aa(double rad, t_fvec3d axis)
 
 	return (res);
 }
-
-

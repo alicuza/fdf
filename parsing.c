@@ -6,13 +6,13 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/13 15:39:54 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 21:14:42 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	init_points(t_state_data *state)
+static void	alloc_points(t_state_data *state)
 {
 
 	state->p.model.x = ft_calloc(state->map.size * sizeof(double));
@@ -39,33 +39,27 @@ static void	parse_row(t_state_data *state, int row)
 	int			i;
 	int			ind;
 	char		**split_line;
-	t_fvec2d	offset;
 
 	split_line = ft_split(state->gnl_line, ' ');
 	if (!split_line)
 		handle_exit(state, EXIT_FAILURE, "parse_map");
-	offset.x = (state->map.dim.width - 1) / 2.0;
-	offset.y = (state->map.dim.height - 1) / 2.0;
 	i = 0;
 	while (split_line[i])
 	{
 		ind = i + row * state->map.dim.width;
-		state->p.model.x[ind] = (double)i - offset.x;
-		state->p.model.y[ind] = (double)row - offset.y;
+		state->p.model.x[ind] = (double)i;
+		state->p.model.y[ind] = (double)row;
 		state->p.model.z[ind] = (double)ft_atoi(split_line[i]);
-		state->p.world.x[ind] = state->p.model.x[ind];
-		state->p.world.y[ind] = state->p.model.y[ind];
-		state->p.world.z[ind] = state->p.model.z[ind];
 		i++;
 	}
 	free_str_arr(&split_line);
 }
 
-void	parse_map(t_state_data *state)
+void	init_model(t_state_data *state)
 {
-	int		i;
+	int	i;
 
-	init_points(state);
+	alloc_points(state);
 	state->fd = open(state->path, O_RDONLY);
 	if (state->fd == -1)
 		handle_exit(state, EXIT_FAILURE, "parse_map");
@@ -79,6 +73,56 @@ void	parse_map(t_state_data *state)
 		free_str(&state->gnl_line);
 		i++;
 	}
+	center_norm_model(state);
 	close(state->fd);
 	state->fd = -1;
+}
+
+t_fvec3d	get_offset(t_state_data *state)
+{
+	size_t		i;
+	double		z_min;
+	double		z_max;
+	t_fvec3d	res;
+
+	z_min = state->p.model.z[0];
+	z_max = state->p.model.z[0];
+	i = 1;
+	while (i < state->map.size)
+	{
+		if (state->p.model.z[i] < z_min)
+			z_min = state->p.model.z[i];
+		if (state->p.model.z[i] > z_max)
+			z_max = state->p.model.z[i];
+		i++;
+	}
+	res.x = (state->map.dim.width - 1.0) / 2.0;
+	res.y = (state->map.dim.height - 1.0) / 2.0;
+	res.z = (z_max + z_min) / 2.0;
+	return (res);
+}
+
+void	center_norm_model(t_state_data *state)
+{
+	size_t		i;
+	t_fvec3d	offset;
+
+	offset = get_offset(state);
+	i = 0;
+	while (i < state->map.size)
+	{
+		state->p.model.x[i] -= offset.x;
+		state->p.model.y[i] -= offset.y;
+		state->p.model.z[i] -= offset.z;
+		i++;
+	}
+	state->p.model = vec_arr_norm(state->p.model, state->map.size);
+	i = 0;
+	while (i < state->map.size)
+	{
+		state->p.world.x[i] = state->p.model.x[i];
+		state->p.world.y[i] = state->p.model.y[i];
+		state->p.world.z[i] = state->p.model.z[i];
+		i++;
+	}
 }

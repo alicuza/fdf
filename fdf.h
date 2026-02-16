@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 13:38:31 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 19:56:12 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
+# include <float.h>
 # include <mlx.h>
 # include <stdlib.h>
 # include <stdio.h>
