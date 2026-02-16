@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/13 10:40:23 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 13:38:31 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,26 @@ typedef struct s_fvec3d_arr
 	double	*y;
 	double	*z;
 }	t_fvec3d_arr;
+
+typedef struct s_fvec3d
+{
+	double	x;
+	double	y;
+	double	z;
+}	t_fvec3d;
+
+typedef struct s_quat
+{
+	double	w;
+	double	x;
+	double	y;
+	double	z;
+}	t_quat;
+
+typedef struct s_mat4
+{
+	double	pos[16];
+}	t_mat4;
 
 typedef struct s_pnt_data
 {

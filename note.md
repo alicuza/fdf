@@ -13,6 +13,60 @@
 - figure out what types your dimensions need to use, `int`, `unsigned int` and then maybe the types from `stdint.h`
 - write README
 
+## Math
+### Matrices
+
+**multiplication**:
+
+for $A \times B = C$, $c_{ij} = \sum_{k=1}^{n} a_{ik} b_{kj}$
+
+### Quaternions
+$i^2 = j^2 = k^2 = -1$
+
+$ij = k$, $jk = i$, $ki = j$
+
+$ji = -k$, $kj = -i$, $ik = -j$
+
+$\begin{array}{c|cccc}
+\times & 1 & i & j & k \\
+\hline
+1 & 1 & i & j & k \\
+i & i & -1 & k & -j \\
+j & j & -k & -1 & i \\
+k & k & j & -i & -1 \\
+\end{array}$
+
+for $p$ and $q$, where
+
+$p = a \cdot w + b \cdot i + c \cdot j + d \cdot k$
+
+$q = e \cdot w + f \cdot i + g \cdot j + h \cdot k$
+
+**multiplication**:
+
+$p \cdot q = (a \cdot e - b \cdot f - c \cdot g - d \cdot h) \cdot w$
+
+$\hphantom{p \cdot q }+ (a \cdot f + b \cdot e + c \cdot h - d \cdot g) \cdot i$
+
+$\hphantom{p \cdot q }+ (a \cdot g - b \cdot h + c \cdot e + d \cdot f) \cdot j$
+
+$\hphantom{p \cdot q }+ (a \cdot h + b \cdot g - c \cdot f + d \cdot e) \cdot k$
+
+**normalization**:
+
+$q = \dfrac{q}{||q||}$
+
+$||q|| = \sqrt{w^2 + x^2 + y^2 + z^2}$
+
+**axis & angle -> quat**
+
+$q = \begin{bmatrix}
+\cos(\theta / 2) \\
+x \cdot \sin(\theta / 2) \\
+y \cdot \sin(\theta / 2) \\
+z \cdot \sin(\theta / 2)
+\end{bmatrix}$
+
 ## Optimization
 - don't calculate transformations for points that do not appear on the screen and who have no edge starting or ending with them that do not appear on the screen. If you don't need them for drawing, you don't need to calculate their transformations, and since all different positions of the point are saved together in a struct for each point, I can always check whether a neighbor is visible on the screen.
 
