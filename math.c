@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:34:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 22:01:26 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 00:16:37 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_mat4	mat4_id(void)
 {
-	t_mat4	res[16];
+	t_mat4	res;
 
 	res.pos[0] = 1.0;
 	res.pos[1] = 0.0;

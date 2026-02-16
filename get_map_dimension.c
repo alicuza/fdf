@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:06:09 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/13 15:43:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 00:04:57 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,18 @@ static int	arr_len(char **str_arr)
 static void	arr_dim(t_state_data *state, char *line)
 {
 	char	**split_line;
+	int		line_len;
 
 	split_line = ft_split(line, ' ');
 	if (!split_line)
 		handle_exit(state, EXIT_FAILURE, "arr_dim");
+	line_len = arr_len(split_line);
 	if (!state->map.dim.width)
-		state->map.dim.width = arr_len(split_line);
+		state->map.dim.width = line_len;
 	if (!state->map.dim.width)
 		handle_exit(state, EXIT_FAILURE, "arr_dim");
 	state->map.dim.height++;
-	if (state->map.dim.width != arr_len(split_line))
+	if (state->map.dim.width != line_len)
 		handle_exit(state, EXIT_FAILURE, "arr_dim");
 	free_str_arr(&split_line);
 }
@@ -61,5 +63,7 @@ void	get_map_dim(t_state_data *state)
 	}
 	close(state->fd);
 	state->fd = -1;
+	if (state->map.dim.height == 0)
+		handle_exit(state, EXIT_FAILURE, "get_map_dim");
 	state->map.size = state->map.dim.width * state->map.dim.height;
 }

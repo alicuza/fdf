@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/09 20:41:07 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/17 00:15:30 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,10 @@ CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
 LIBS = -Llibft -lft -lmlx -lXext -lX11 -lm
 SRCS =	main.c \
-		get_map_dimensions.c \
+		get_map_dimension.c \
 		parsing.c \
-		error_handling.c
+		error_handling.c \
+		math.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 

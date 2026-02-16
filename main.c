@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 20:43:11 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 00:17:11 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ int	main(int argc, char **argv)
 	t_state_data	state;
 
 	if (argc != 2)
-		return (ft_printf("error: no map passed\nusage: ./fdf path/to/map"), 1);
+		return (ft_printf("error: no map passed\nusage: ./fdf path/to/map\n"), 1);
 	init_state(&state, argv[1]);
 	get_map_dim(&state);
 	init_model(&state);
-	rotate_points(&state); //TODO
-	translate_points(&state); //TODO
-	rotate_world(&state); //TODO
+//	rotate_points(&state); //TODO
+//	translate_points(&state); //TODO
+//	rotate_world(&state); //TODO
 	return (handle_exit(&state, EXIT_SUCCESS, "main"), 0);
 }

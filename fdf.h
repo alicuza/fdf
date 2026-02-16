@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 19:56:12 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 00:07:36 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,30 @@ typedef struct s_state_data
 	char		*gnl_line;
 	int			fd;
 }	t_state_data;
+
+// parsing.c
+void	init_model(t_state_data *state);
+void	center_norm_model(t_state_data *state);
+t_fvec3d	get_offset(t_state_data *state);
+
+// get_map_dimension.c
+void	get_map_dim(t_state_data *state);
+
+// error_handling.c
+void	handle_exit(t_state_data *state, int exit_status, const char *caller);
+void	free_str(char **str);
+void	free_str_arr(char ***str_arr);
+
+// math.c
+t_mat4	mat4_id(void);
+t_mat4	mat4_mult(t_mat4 m1, t_mat4 m2);
+t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale);
+t_quat	quat_from_aa(double rad, t_fvec3d axis);
+t_quat	quat_mult(t_quat q1, t_quat q2);
+t_quat	quat_norm(t_quat q);
+t_fvec3d	vec_norm(t_fvec3d v);
+t_fvec3d_arr	point_trs_mult_arr(t_fvec3d_arr *p, size_t len, t_mat4 m);
+t_fvec3d_arr	vec_arr_norm(t_fvec3d_arr v, size_t len);
+double	deg_to_rad(double deg);
+double	rad_to_deg(double rad);
 #endif

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 21:14:42 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/16 23:36:30 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 static void	alloc_points(t_state_data *state)
 {
 
-	state->p.model.x = ft_calloc(state->map.size * sizeof(double));
-	state->p.model.y = ft_calloc(state->map.size * sizeof(double));
-	state->p.model.z = ft_calloc(state->map.size * sizeof(double));
-	state->p.world.x = ft_calloc(state->map.size * sizeof(double));
-	state->p.world.y = ft_calloc(state->map.size * sizeof(double));
-	state->p.world.z = ft_calloc(state->map.size * sizeof(double));
-	state->p.screen.x = ft_calloc(state->map.size * sizeof(double));
-	state->p.screen.y = ft_calloc(state->map.size * sizeof(double));
+	state->p.model.x = ft_calloc(state->map.size, sizeof(double));
+	state->p.model.y = ft_calloc(state->map.size, sizeof(double));
+	state->p.model.z = ft_calloc(state->map.size, sizeof(double));
+	state->p.world.x = ft_calloc(state->map.size, sizeof(double));
+	state->p.world.y = ft_calloc(state->map.size, sizeof(double));
+	state->p.world.z = ft_calloc(state->map.size, sizeof(double));
+	state->p.screen.x = ft_calloc(state->map.size, sizeof(double));
+	state->p.screen.y = ft_calloc(state->map.size, sizeof(double));
 	if (!state->p.model.x || !state->p.model.y || !state->p.model.z
 		|| !state->p.world.x || !state->p.world.y || !state->p.world.z
 		|| !state->p.screen.x || !state->p.screen.y)
@@ -42,7 +42,7 @@ static void	parse_row(t_state_data *state, int row)
 
 	split_line = ft_split(state->gnl_line, ' ');
 	if (!split_line)
-		handle_exit(state, EXIT_FAILURE, "parse_map");
+		handle_exit(state, EXIT_FAILURE, "parse_row");
 	i = 0;
 	while (split_line[i])
 	{
@@ -62,13 +62,13 @@ void	init_model(t_state_data *state)
 	alloc_points(state);
 	state->fd = open(state->path, O_RDONLY);
 	if (state->fd == -1)
-		handle_exit(state, EXIT_FAILURE, "parse_map");
+		handle_exit(state, EXIT_FAILURE, "init_model");
 	i = 0;
 	while (i < state->map.dim.height)
 	{
 		state->gnl_line = get_next_line(state->fd);
 		if (!state->gnl_line)
-			handle_exit(state, EXIT_FAILURE, "parse_map");
+			handle_exit(state, EXIT_FAILURE, "init_model");
 		parse_row(state, i);
 		free_str(&state->gnl_line);
 		i++;

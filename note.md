@@ -7,11 +7,14 @@
 [https://github.com/ailopez-o/42Barcelona-FdF](this mofo projects to a globe)
 
 ## TODO
-- ~~error handling in fucking general.~~ need to write up my solution
+- ~~error handling in fucking general.~~ need to write up my solution.
 - ~~cleanup function.~~
 - ~~go through comments, fix issues, clean up code~~ completely refactor for norm compliance and sane architecture.
 - figure out what types your dimensions need to use, `int`, `unsigned int` and then maybe the types from `stdint.h`
-- write README
+- write README-
+- continue with math writeup.
+- write transformation function.
+- write projection function.
 
 ## Math
 ### Matrices
