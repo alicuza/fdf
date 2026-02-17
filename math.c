@@ -6,13 +6,13 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:34:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 00:16:37 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 20:42:46 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_mat4	mat4_id(void)
+t_mat4	new_mat4_id(void)
 {
 	t_mat4	res;
 
@@ -25,6 +25,58 @@ t_mat4	mat4_id(void)
 	res.pos[5] = 1.0;
 	res.pos[6] = 0.0;
 	res.pos[7] = 0.0;
+
+	res.pos[8] = 0.0;
+	res.pos[9] = 0.0;
+	res.pos[10] = 1.0;
+	res.pos[11] = 0.0;
+
+	res.pos[12] = 0.0;
+	res.pos[13] = 0.0;
+	res.pos[14] = 0.0;
+	res.pos[15] = 1.0;
+	return (res);
+}
+
+t_mat4	new_mat_iso(void)
+{
+	t_mat4	res;
+
+	res.pos[0] = M_SQRT1_2;
+	res.pos[1] = -M_SQRT1_3;
+	res.pos[2] = M_SQRT1_6;
+	res.pos[3] = IMG_SIZE_X / 2.0;
+
+	res.pos[4] = M_SQRT1_2;
+	res.pos[5] = M_SQRT1_3;
+	res.pos[6] = -M_SQRT1_6;
+	res.pos[7] = IMG_SIZE_Y / 2.0;
+
+	res.pos[8] = 0.0;
+	res.pos[9] = M_SQRT1_3;
+	res.pos[10] = M_SQRT2_3;
+	res.pos[11] = 0.0;
+
+	res.pos[12] = 0.0;
+	res.pos[13] = 0.0;
+	res.pos[14] = 0.0;
+	res.pos[15] = 1.0;
+	return (res);
+}
+
+t_mat4	new_mat_21(void)
+{
+	t_mat4	res;
+
+	res.pos[0] = M_SQRT3_HALF;
+	res.pos[1] = -M_SQRT3_HALF;
+	res.pos[2] = 0.0;
+	res.pos[3] = IMG_SIZE_X / 2.0;
+
+	res.pos[4] = 0.5;
+	res.pos[5] = 0.5;
+	res.pos[6] = -1.0;
+	res.pos[7] = IMG_SIZE_Y / 2.0;
 
 	res.pos[8] = 0.0;
 	res.pos[9] = 0.0;
@@ -65,23 +117,39 @@ t_mat4	mat4_mult(t_mat4 m1, t_mat4 m2)
 	return (res);
 }
 
-t_fvec3d_arr	point_trs_mult_arr(t_fvec3d_arr *p, size_t len, t_mat4 m)
+void	p_soa_trs_mult_3d(t_fvec3d_arr *p0, t_fvec3d_arr *p1, size_t size, t_mat4 m)
 {
 	size_t		i;
-	t_fvec3d	tmp;
 	
 	i = 0;
-	while (i < len)
+	while (i < size)
 	{
-		tmp.x = p->x[i] * m.pos[0] + p->y[i] * m.pos[1] + p->z[i] * m.pos[2] + m.pos[3];
-		tmp.y = p->x[i] * m.pos[4] + p->y[i] * m.pos[5] + p->z[i] * m.pos[6] + m.pos[7];
-		tmp.z = p->x[i] * m.pos[8] + p->y[i] * m.pos[9] + p->z[i] * m.pos[10] + m.pos[11];
-		p->x[i] = tmp.x;
-		p->y[i] = tmp.y;
-		p->z[i] = tmp.z;
+		p1->x[i] = p0->x[i] * m.pos[0] + p0->y[i] * m.pos[1] + p0->z[i] * m.pos[2] + m.pos[3];
+		p1->y[i] = p0->x[i] * m.pos[4] + p0->y[i] * m.pos[5] + p0->z[i] * m.pos[6] + m.pos[7];
+		p1->z[i] = p0->x[i] * m.pos[8] + p0->y[i] * m.pos[9] + p0->z[i] * m.pos[10] + m.pos[11];
 		i++;
 	}
-	return (*p);
+}
+
+void	p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1, size_t size, t_mat4 m)
+{
+	size_t		i;
+	
+	i = 0;
+	while (i < size)
+	{
+		p1->x[i] = p0->x[i] * m.pos[0] + p0->y[i] * m.pos[1] + p0->z[i] * m.pos[2] + m.pos[3];
+		p1->y[i] = p0->x[i] * m.pos[4] + p0->y[i] * m.pos[5] + p0->z[i] * m.pos[6] + m.pos[7];
+		i++;
+	}
+}
+
+t_quat	new_quat_id(void)
+{
+	t_quat	res;
+
+	res = (t_quat){1, 0, 0, 0};
+	return (res);
 }
 
 t_quat	quat_mult(t_quat q1, t_quat q2)
@@ -158,7 +226,7 @@ t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
 {
 	t_mat4	res;
 
-	res = mat4_id();
+	res = new_mat4_id();
 	res.pos[0] = (1.0 - 2.0 * (q.y * q.y + q.z * q.z)) * scale;
 	res.pos[1] = (2.0 * (q.x * q.y - q.z * q.w)) * scale;
 	res.pos[2] = (2.0 * (q.x * q.z + q.y * q.w)) * scale;
@@ -199,6 +267,19 @@ t_quat	quat_from_aa(double rad, t_fvec3d axis)
 	res.x = axis.x * sin_rad_half;
 	res.y = axis.y * sin_rad_half;
 	res.z = axis.z * sin_rad_half;
-
 	return (res);
+}
+
+int	is_quat_equal(t_quat q1, t_quat q2) //TODO any error handling needed here?
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		if (((double *)&q1)[i] != ((double *)&q2)[i])
+			return (0);
+		i++;
+	}
+	return(1);
 }

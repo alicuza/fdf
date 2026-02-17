@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:05:02 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 18:35:05 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 21:28:44 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	free_str_arr(char ***str_arr)
 
 void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 {
+	mlx_loop_end(state->mlx_ptr);
 	if (state->img.ptr)
 		mlx_destroy_image (state->mlx_ptr, state->img.ptr);
 	if (state->win.ptr)

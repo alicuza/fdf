@@ -6,19 +6,22 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/17 00:15:30 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/17 22:40:30 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
-LIBS = -Llibft -lft -lmlx -lXext -lX11 -lm
+LIBS = -lmlx -lXext -lX11 -lm
+LIBFT = ./libft/libft.a
 SRCS =	main.c \
 		get_map_dimension.c \
 		parsing.c \
 		error_handling.c \
-		math.c
+		math.c \
+		transform_points.c \
+		drawing.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 
@@ -28,11 +31,14 @@ all: .release $(NAME)
 	if [ -f .debug ]; then $(MAKE) fclean; fi
 	touch .release
 
-$(NAME): $(OBJS)
-	if [ -f .release ]; then $(MAKE) -C libft; \
-	elif [ -f .debug ]; then $(MAKE) -C libft debug; \
-	else $(MAKE) -C libft debug; fi
-	$(CC) $(CFLAGS) $^ $(LIBS) -o $@
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
+
+$(LIBFT): FORCE
+	if [ -f .debug ]; then $(MAKE) -C libft debug; \
+	else $(MAKE) -C libft; fi
+
+FORCE:
 
 clean:
 	$(MAKE) -C libft clean
@@ -51,6 +57,6 @@ debug: .debug $(NAME)
 	if [ -f .release ]; then $(MAKE) fclean; fi
 	touch .debug
 
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re debug FORCE
 
 -include $(DEPS)

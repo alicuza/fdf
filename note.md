@@ -3,8 +3,9 @@
 - Felix had the idea of using an environment variable instead of the .dotfiles. But how would an env var retain information from the last compilation to know whether it needs to fclean first or not.
 
 # fdf
-## Inspiration
+## Resources
 [https://github.com/ailopez-o/42Barcelona-FdF](this mofo projects to a globe)
+[https://www.codinglabs.net/article_world_view_projection_matrix.aspx](Article - World, View and Projection Transformation Matrices)
 
 ## TODO
 - ~~error handling in fucking general.~~ need to write up my solution.
@@ -69,6 +70,13 @@ x \cdot \sin(\theta / 2) \\
 y \cdot \sin(\theta / 2) \\
 z \cdot \sin(\theta / 2)
 \end{bmatrix}$
+
+### Projections
+#### True Isometric
+- TODO with panning to the middle of the screen.
+
+#### 2:1 Ratio (Dimetric variation)
+- TODO with panning to the middle of the screen.
 
 ## Optimization
 - don't calculate transformations for points that do not appear on the screen and who have no edge starting or ending with them that do not appear on the screen. If you don't need them for drawing, you don't need to calculate their transformations, and since all different positions of the point are saved together in a struct for each point, I can always check whether a neighbor is visible on the screen.
@@ -329,6 +337,13 @@ tmux show -gp    # pane options
 ## Commands
 `n_gt`: go to next tab
 `n_gT`: go to previous tab
+`n_C`: Change from current position to end of line. In human language, it behaves like `n_D` and enters insert mode.
+
+## Configuration
+`nnoremap Y y$` to make `n_Y` consistent with `n_D` and `n_C` behaviour.
+
+## Resources
+[https://www.phcomp.co.uk/Tutorials/Unix-And-Linux/Vi-and-vim-reference-sheet.html](Vim quick reference) by some based linux people in England.
 
 # scan-build
 check it for better compiler flags and checks.
@@ -354,3 +369,14 @@ precmd() {
   printf '\033]2;%s\033\\' "${PWD/#$HOME/~}"
 }
 ```
+
+# Program Memory Layout
+## Resources
+[https://gist.github.com/CMCDragonkai/10ab53654b2aa6ce55c11cfc5b2432a4](this is a cool writeup)
+
+# echo
+`echo -n [something]` prints it without the `\n` at the end
+
+# C
+## to ponder
+functions that return a pointer can be used as lvalues that can be dereferenced and used as a normal variable.

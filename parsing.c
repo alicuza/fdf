@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/16 23:36:30 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 21:10:18 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,12 @@ void	init_model(t_state_data *state)
 		i++;
 	}
 	center_norm_model(state);
+//	init_world(state); // redundant?
 	close(state->fd);
 	state->fd = -1;
 }
 
-t_fvec3d	get_offset(t_state_data *state)
+t_fvec3d	get_center(t_state_data *state)
 {
 	size_t		i;
 	double		z_min;
@@ -107,7 +108,7 @@ void	center_norm_model(t_state_data *state)
 	size_t		i;
 	t_fvec3d	offset;
 
-	offset = get_offset(state);
+	offset = get_center(state);
 	i = 0;
 	while (i < state->map.size)
 	{
@@ -117,12 +118,21 @@ void	center_norm_model(t_state_data *state)
 		i++;
 	}
 	state->p.model = vec_arr_norm(state->p.model, state->map.size);
+}
+
+/* pretty sure it is redundant, because this happens on the first mlx_loop_hook
+
+void	init_world(t_state_data *state)
+{
+	int	i;
+
 	i = 0;
 	while (i < state->map.size)
 	{
-		state->p.world.x[i] = state->p.model.x[i];
-		state->p.world.y[i] = state->p.model.y[i];
-		state->p.world.z[i] = state->p.model.z[i];
+		state->p.world.x[i] = state->p.model.x[i] * state->trans.scale;
+		state->p.world.y[i] = state->p.model.y[i] * state->trans.scale;
+		state->p.world.z[i] = state->p.model.z[i] * state->trans.scale;
 		i++;
 	}
 }
+*/

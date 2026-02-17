@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:48:25 by sancuta           #+#    #+#             */
-/*   Updated: 2026/01/25 15:47:07 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/17 22:05:08 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	ft_free_all(t_stash **head)
 	t_stash	*buffer;
 	t_stash	*tmp;
 
+	if (!*head)
+		return ;
 	buffer = *head;
 	while (buffer)
 	{
@@ -68,7 +70,6 @@ void	ft_free_all(t_stash **head)
 		free(buffer);
 		buffer = tmp;
 	}
-	(*head)->next = NULL;
 }
 
 void	ft_free_buf(t_stash **head, int fd)
