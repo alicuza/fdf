@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:08:37 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 17:22:27 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,14 @@ typedef struct s_map_data
 	size_t	size;
 }	t_map_data;
 
+// delta_angle is in radians;
+
 typedef struct s_trans_data
 {
 	t_quat		rot;
 	t_fvec3d	axis;
 	t_fvec3d	offset;
-	double		delta_angle; // in radians
+	double		delta_angle;
 	double		scale;
 }	t_trans_data;
 
@@ -140,9 +142,9 @@ typedef struct s_state_data
 	int				fd;
 }	t_state_data;
 
+// init
 void			init_model(t_state_data *state);
 void			center_norm_model(t_state_data *state);
-t_fvec3d		get_offset(t_state_data *state);
 void			get_map_dim(t_state_data *state);
 
 //math
@@ -159,17 +161,17 @@ void			p_soa_trs_mult_3d(t_fvec3d_arr *p0, t_fvec3d_arr *p1,
 					size_t size, t_mat4 m);
 void			p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1,
 					size_t size, t_mat4 m);
-double			deg_to_rad(double deg);
-double			rad_to_deg(double rad);
 t_fvec3d		vec_norm(t_fvec3d v);
 t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len);
 int				min(int n1, int n2);
+
+//unused
 int				max(int n1, int n2);
+double			deg_to_rad(double deg);
+double			rad_to_deg(double rad);
 
-//drawing
+// loop
 void			draw(t_state_data *state);
-
-//hooks
 int				handle_key_press(int keycode, void *param);
 int				render(void *data);
 int				call_exit(void *param);

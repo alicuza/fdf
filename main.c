@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 16:24:50 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 17:32:43 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 static void	init_trans(t_state_data *state)
 {
+	state->trans.rot = quat_id();
 	state->trans.delta_angle = 0.0;
 	state->trans.offset = (t_fvec3d){0, 0, 0};
 	state->trans.axis = (t_fvec3d){0, 1, 0};

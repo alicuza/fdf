@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/18 10:01:12 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/18 17:45:37 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,13 @@ CFLAGS = -MMD -MP -Wall -Wextra -Werror
 LIBS = -lmlx -lXext -lX11 -lm
 LIBFT = ./libft/libft.a
 SRCS =	main.c \
+		math_basic.c \
+		math_constructors.c \
+		math_vector_mult.c \
+		math_quaternions.c \
 		get_map_dimension.c \
 		parsing.c \
 		error_handling.c \
-		math.c \
 		transform_points.c \
 		drawing.c \
 		user_input.c
