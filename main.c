@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 11:34:23 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 12:16:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	init_dim(t_state_data *state)
 	state->img.dim = (t_dim2d){IMG_SIZE_X, IMG_SIZE_Y};
 	state->img.offset_to_win.x = (WIN_SIZE_X - IMG_SIZE_X) * 0.5;
 	state->img.offset_to_win.y = (WIN_SIZE_Y - IMG_SIZE_Y) * 0.5;
+	state->img.size= IMG_SIZE_X * IMG_SIZE_Y * sizeof(unsigned int);
 }
 
 static void	init_state(t_state_data *state, char *path)
@@ -68,7 +69,6 @@ int	main(int argc, char **argv)
 	init_state(&state, argv[1]);
 	get_map_dim(&state);
 	init_model(&state);
-	render(&state);
 	mlx_key_hook(state.win.ptr, handle_key_press, &state);
 	mlx_loop_hook(state.mlx_ptr, render, &state);
 	mlx_hook(state.win.ptr, ClientMessage, StructureNotifyMask,

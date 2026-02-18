@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 21:14:20 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 09:38:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 12:14:21 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,7 @@ void	draw(t_state_data *state)
 			*(unsigned int *)(state->img.buf + ind) = 0x00ffffff;
 		i++;
 	}
+	mlx_put_image_to_window (state->mlx_ptr, state->win.ptr,
+							state->img.ptr, state->img.offset_to_win.x,
+							state->img.offset_to_win.y);
 }

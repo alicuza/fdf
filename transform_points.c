@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 09:58:49 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 10:05:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 12:17:07 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void	model_to_world(t_state_data *state)
 {
 	t_quat		delta_q;
 	t_mat4		trs_mat;
+
+	state->trans.delta_angle = 0.0005;
+	state->trans.axis = (t_fvec3d){0, 0, 1};
 
 	if (fabs(state->trans.delta_angle) >= FLT_EPSILON)
 	{
@@ -49,12 +52,8 @@ int	render(void *data)
 	t_state_data	*state;
 
 	state = (t_state_data *)data;
-	mlx_clear_window(state->mlx_ptr, state->win.ptr);
 	model_to_world(state);
 	world_to_screen(state);
 	draw(state);
-	mlx_put_image_to_window (state->mlx_ptr, state->win.ptr,
-							state->img.ptr, state->img.offset_to_win.x,
-							state->img.offset_to_win.y);
 	return (1);
 }
