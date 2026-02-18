@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:19:28 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/12 13:48:14 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 15:51:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 static int	ft_isspace(int c)
 {
 	return (c == 32 || (c >= 9 && c <= 13));
-}
-
-static int	ft_issign(int c)
-{
-	return (c == '-' || c == '+');
 }
 
 /*	pay attention to the wording in strtol(3):

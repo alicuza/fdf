@@ -18,7 +18,6 @@
 - ~~ write projection function.~~
 - how do i handle z values that are high?
 
-
 ## Math
 ### Matrices
 
@@ -382,3 +381,6 @@ precmd() {
 # C
 ## to ponder
 functions that return a pointer can be used as lvalues that can be dereferenced and used as a normal variable.
+
+# Norminette
+wrong indentation for functions that span multiple lines. 2 tabs if there is an assignment, only 1 if there isn't. intended behaviour?

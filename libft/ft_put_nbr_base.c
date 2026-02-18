@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 14:45:54 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 11:34:25 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 16:14:16 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ft_put_nbr_base(unsigned long n, const char *base)
 	unsigned long	base_len;
 
 	base_len = ft_strlen(base);
-
 	return (recurse(n, base, base_len, 0));
 }
 

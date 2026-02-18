@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/03 01:32:41 by sancuta          ###   ########.fr        #
+#    Updated: 2026/02/18 15:59:07 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CC ?= cc
 CFLAGS ?= -MMD -MP -Wall -Wextra -Werror
 ARFLAGS = -rcs
 SRCS =	ft_isalpha.c \
+		ft_issign.c \
 		ft_isdigit.c \
 		ft_isalnum.c \
 		ft_isascii.c \

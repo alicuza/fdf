@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:39:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/01/25 15:45:50 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 16:01:11 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_list
 /* libc functions without external functions */
 
 int		ft_isalpha(int c);
+int		ft_issign(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);

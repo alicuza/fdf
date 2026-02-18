@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:06:09 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 00:04:57 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 17:10:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 static int	arr_len(char **str_arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (str_arr[i])
+	while (str_arr[i]
+		&& (ft_isdigit(*(str_arr[i])) || ft_issign(*(str_arr[i]))))
 		i++;
 	return (i);
 }
@@ -56,7 +57,7 @@ void	get_map_dim(t_state_data *state)
 		{
 			if (errno)
 				handle_exit(state, EXIT_FAILURE, "get_map_dim");
-			break;
+			break ;
 		}
 		arr_dim(state, cur_line);
 		free_str(&cur_line);

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 08:49:43 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 17:11:00 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	alloc_points(t_state_data *state)
 {
-
 	state->p.model.x = ft_calloc(state->map.size, sizeof(double));
 	state->p.model.y = ft_calloc(state->map.size, sizeof(double));
 	state->p.model.z = ft_calloc(state->map.size, sizeof(double));
@@ -74,7 +73,6 @@ void	init_model(t_state_data *state)
 		i++;
 	}
 	center_norm_model(state);
-//	init_world(state); // redundant?
 	close(state->fd);
 	state->fd = -1;
 }
