@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 10:16:13 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 11:34:23 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void	init_state(t_state_data *state, char *path)
 	*state = (t_state_data){0};
 	state->fd = -1;
 	init_dim(state);
-	ft_printf("x = %d, y = %d", state->win.dim.width, state->win.dim.height);
 	if (!path)
 		handle_exit(state, EXIT_FAILURE, "prep_drawing");
 	state->path = path;
