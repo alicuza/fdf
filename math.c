@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:34:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 20:42:46 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 09:01:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ t_fvec3d	vec_norm(t_fvec3d v)
 	return (res);
 }
 
-t_fvec3d_arr	vec_arr_norm(t_fvec3d_arr v, size_t len)
+t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len)
 {
 	double			mag;
 	double			mag_max;
@@ -283,3 +283,18 @@ int	is_quat_equal(t_quat q1, t_quat q2) //TODO any error handling needed here?
 	}
 	return(1);
 }
+
+int	min(int n1, int n2)
+{
+	if (n1 < n2)
+		return (n1);
+	return (n2);
+}
+
+int	max(int n1, int n2)
+{
+	if (n1 > n2)
+		return (n1);
+	return (n2);
+}
+

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 21:14:20 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 21:48:56 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 09:38:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	draw(t_state_data *state)
 	size_t	ind;
 	size_t	i;
 
+	ft_memset(state->img.buf, 0, state->img.size);
 	i = 0;
 	while (i < state->map.size)
 	{
@@ -24,7 +25,7 @@ void	draw(t_state_data *state)
 				+ (int)state->p.screen.x[i] * state->img.bits_ppix / 8;
 		if (state->p.screen.x[i] >= 0 && state->p.screen.x[i] < IMG_SIZE_X
 				&& state->p.screen.y[i] >= 0 && state->p.screen.y[i] < IMG_SIZE_Y)
-			*((unsigned int *)state->img.buf + ind) = 0x00ffffff;
+			*(unsigned int *)(state->img.buf + ind) = 0x00ffffff;
 		i++;
 	}
 }

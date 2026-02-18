@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 21:36:22 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 10:22:30 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include <math.h>
 # include <float.h>
 # include <mlx.h>
+# include <X11/X.h>
+# include <X11/keysym.h>
 # include <stdlib.h>
 # include <stdio.h>
 
@@ -40,9 +42,15 @@ typedef enum e_proj
 
 typedef struct s_dim2d
 {
-	int	height;
 	int	width;
+	int	height;
 }	t_dim2d;
+
+typedef struct s_vec2d
+{
+	int	x;
+	int	y;
+}	t_vec2d;
 
 typedef struct s_fvec2d_arr
 {
@@ -86,13 +94,14 @@ typedef struct s_pnt_data
 
 typedef struct s_img_data
 {
+	t_vec2d	offset_to_win;
 	t_dim2d	dim;
 	void	*ptr;
 	char	*buf;
+	size_t	size;
 	int		bits_ppix;
 	int		size_line;
 	int		endian;
-	int		offset_from_win;
 }	t_img_data;
 
 typedef struct s_win_data
@@ -109,9 +118,10 @@ typedef struct s_map_data
 
 typedef struct s_trans_data
 {
-	double		delta_angle; // in radians
+	t_quat		rot;
 	t_fvec3d	axis;
 	t_fvec3d	offset;
+	double		delta_angle; // in radians
 	double		scale;
 }	t_trans_data;
 
@@ -129,34 +139,40 @@ typedef struct s_state_data
 	int				fd;
 }	t_state_data;
 
-// parsing.c
 void	init_model(t_state_data *state);
 void	center_norm_model(t_state_data *state);
 t_fvec3d	get_offset(t_state_data *state);
-
-// get_map_dimension.c
 void	get_map_dim(t_state_data *state);
 
-// error_handling.c
-void	handle_exit(t_state_data *state, int exit_status, const char *caller);
-void	free_str(char **str);
-void	free_str_arr(char ***str_arr);
-
-// math.c
-t_mat4	mat4_id(void);
+//math
+t_mat4	new_mat4_id(void);
 t_mat4	new_mat_iso(void);
 t_mat4	new_mat_21(void);
 t_mat4	mat4_mult(t_mat4 m1, t_mat4 m2);
 t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale);
+t_quat	new_quat_id(void);
 t_quat	quat_from_aa(double rad, t_fvec3d axis);
 t_quat	quat_mult(t_quat q1, t_quat q2);
 t_quat	quat_norm(t_quat q);
-t_fvec3d	vec_norm(t_fvec3d v);
 void	p_soa_trs_mult_3d(t_fvec3d_arr *p0, t_fvec3d_arr *p1, size_t size, t_mat4 m);
 void	p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1, size_t size, t_mat4 m);
-t_fvec3d_arr	vec_arr_norm(t_fvec3d_arr v, size_t len);
 double	deg_to_rad(double deg);
 double	rad_to_deg(double rad);
-void	world_to_screen(t_state_data *state);
+t_fvec3d	vec_norm(t_fvec3d v);
+t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len);
+int	min(int n1, int n2);
+int	max(int n1, int n2);
+
+//drawing
 void	draw(t_state_data *state);
+
+//hooks
+int	handle_key_press(int keycode, void *param);
+int	render(void *data);
+int	call_exit(void *param);
+
+// exiting
+void	handle_exit(t_state_data *state, int exit_status, const char *caller);
+void	free_str(char **str);
+void	free_str_arr(char ***str_arr);
 #endif

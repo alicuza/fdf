@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/17 21:10:18 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 08:49:43 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	center_norm_model(t_state_data *state)
 		state->p.model.z[i] -= offset.z;
 		i++;
 	}
-	state->p.model = vec_arr_norm(state->p.model, state->map.size);
+	state->p.model = vec_soa_norm(state->p.model, state->map.size);
 }
 
 /* pretty sure it is redundant, because this happens on the first mlx_loop_hook
