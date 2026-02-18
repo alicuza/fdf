@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 09:58:49 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 12:17:07 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/18 12:53:02 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	world_to_screen(t_state_data *state)
 {
 	t_mat4		proj_mat;
 
-	proj_mat = new_mat_21();
+	proj_mat = new_mat_iso();
 /*	if (state->proj == DIM)
 		proj_mat = new_mat_21();
 	else
