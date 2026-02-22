@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:22:27 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/22 21:58:17 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ typedef struct s_vec2d
 	int	x;
 	int	y;
 }	t_vec2d;
+
+typedef struct s_fvec2d
+{
+	double	x;
+	double	y;
+}	t_fvec2d;
 
 typedef struct s_fvec2d_arr
 {
