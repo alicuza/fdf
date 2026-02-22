@@ -36,7 +36,7 @@ all: .release $(NAME)
 	touch .release
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
+	$(CC) $(CFLAGS) $^ $(LIBS) -o $@
 
 $(LIBFT): FORCE
 	if [ -f .debug ]; then $(MAKE) -C libft debug; \
