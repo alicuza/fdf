@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 12:39:07 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 23:13:38 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,20 @@ static void	parse_row(t_state_data *state, int row)
 {
 	int			i;
 	int			ind;
-	char		**split_line;
 
-	split_line = ft_split(state->gnl_line, ' ');
-	if (!split_line)
+	state->split_line = ft_split(state->gnl_line, ' ');
+	if (!state->split_line)
 		handle_exit(state, EXIT_FAILURE, "parse_row");
 	i = 0;
-	while (split_line[i])
+	while (state->split_line[i])
 	{
 		ind = i + row * state->map.dim.width;
 		state->p.model.x[ind] = (double)i;
 		state->p.model.y[ind] = (double)row;
-		state->p.model.z[ind] = (double)ft_atoi(split_line[i]);
+		state->p.model.z[ind] = (double)ft_atoi(state->split_line[i]);
 		i++;
 	}
-	free_str_arr(&split_line);
+	free_str_arr(&(state->split_line));
 }
 
 void	init_model(t_state_data *state)

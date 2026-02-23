@@ -11,11 +11,11 @@
 - ~~error handling in fucking general.~~ need to write up my solution.
 - ~~cleanup function.~~
 - ~~go through comments, fix issues, clean up code~~ completely refactor for norm compliance and sane architecture.
-- figure out what types your dimensions need to use, `int`, `unsigned int` and then maybe the types from `stdint.h`
+- figure out what types your dimensions need to use, `int`, `unsigned int` and then maybe the types from `stdint.h` - still need to protect against under and overflow.
 - write README
 - continue with math writeup.
 - ~~write transformation function.~~
-- ~~ write projection function.~~
+- ~~write projection function.~~
 - how do i handle z values that are high?
 
 ## Math

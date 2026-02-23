@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:05:02 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 15:05:10 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 23:20:35 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	free_str_arr(char ***str_arr)
 {
 	size_t	i;
 
+	if (!(str_arr && *str_arr))
+		return ;
 	i = 0;
 	while ((*str_arr)[i])
 	{
@@ -30,6 +32,18 @@ void	free_str_arr(char ***str_arr)
 	}
 	free(*str_arr);
 	*str_arr = NULL;
+}
+
+void	free_points(t_state_data *state)
+{
+	free(state->p.model.x);
+	free(state->p.model.y);
+	free(state->p.model.z);
+	free(state->p.world.x);
+	free(state->p.world.y);
+	free(state->p.world.z);
+	free(state->p.screen.x);
+	free(state->p.screen.y);
 }
 
 void	handle_exit(t_state_data *state, int exit_status, const char *caller)
@@ -42,18 +56,13 @@ void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 	{
 		mlx_loop_end(state->mlx_ptr);
 		mlx_destroy_display(state->mlx_ptr);
+		free(state->mlx_ptr);
 	}
-	free(state->p.model.x);
-	free(state->p.model.y);
-	free(state->p.model.z);
-	free(state->p.world.x);
-	free(state->p.world.y);
-	free(state->p.world.z);
-	free(state->p.screen.x);
-	free(state->p.screen.y);
+	free_points(state);
 	if (state->fd != -1)
 		close(state->fd);
-	free(state->gnl_line);
+	free_str(&(state->gnl_line));
+	free_str_arr(&(state->split_line));
 	get_next_line(-255);
 	if (exit_status == EXIT_FAILURE)
 		perror(caller);

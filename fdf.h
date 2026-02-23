@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 22:04:35 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 22:46:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ typedef struct s_state_data
 	void			*mlx_ptr;
 	char			*path;
 	char			*gnl_line;
+	char			**split_line;
 	int				fd;
 }	t_state_data;
 
