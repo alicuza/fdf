@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 13:23:01 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 21:50:00 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 /*
 	for initialization I could use ft_memset(state, 0, sizeof(t_state_data));
 	fd = -1, to be able to check if fd is open when doing cleanup.
-	default rotation around y-axis
 */
 
-static void	init_trans(t_state_data *state)
+void	init_trans(t_state_data *state)
 {
 	state->trans.rot = quat_id();
-	state->trans.delta_angle = 0.0;
-	state->trans.offset = (t_fvec3d){0, 0, 0};
-	state->trans.axis = (t_fvec3d){0, 1, 0};
+	state->trans.autorot = 0;
+	state->trans.delta_angle = ROT_SPEED;
+	state->trans.offset = (t_fvec3d){0.0, 0.0, 0.0};
+	state->trans.axis = AXIS_ZP;
 	state->trans.scale = (double)min(IMG_SIZE_X, IMG_SIZE_Y) * 0.50;
 }
 
@@ -71,7 +71,9 @@ int	main(int argc, char **argv)
 	init_state(&state, argv[1]);
 	get_map_dim(&state);
 	init_model(&state);
-	mlx_key_hook(state.win.ptr, handle_key_press, &state);
+	mlx_hook(state.win.ptr, KeyPress, KeyPressMask, handle_key_press, &state);
+	mlx_hook(state.win.ptr, KeyRelease, KeyReleaseMask,
+		handle_key_release, &state);
 	mlx_loop_hook(state.mlx_ptr, render, &state);
 	mlx_hook(state.win.ptr, ClientMessage, StructureNotifyMask,
 		call_exit, &state);

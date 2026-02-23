@@ -6,22 +6,31 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 11:02:10 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 22:04:35 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
-# define WIN_SIZE_X 720
-# define WIN_SIZE_Y 480
-# define IMG_SIZE_X 480
-# define IMG_SIZE_Y 360
+# define WIN_SIZE_X 1280
+# define WIN_SIZE_Y 720
+# define IMG_SIZE_X 1280
+# define IMG_SIZE_Y 720
+# define AXIS_XP (t_fvec3d){1, 0, 0}
+# define AXIS_XN (t_fvec3d){-1, 0, 0}
+# define AXIS_YP (t_fvec3d){0, 1, 0}
+# define AXIS_YN (t_fvec3d){0, -1, 0}
+# define AXIS_ZP (t_fvec3d){0, 0, 1}
+# define AXIS_ZN (t_fvec3d){0, 0, -1}
 # define TITLE "sancuta's magical fildefer"
 # define M_SQRT1_3 0.57735026918962576451
 # define M_SQRT1_6 0.40824829046386301636
 # define M_SQRT2_3 0.81649658092772603273
 # define M_SQRT3_HALF 0.86602540378443864676
 # define EPSILON 1e-9
+# define MOVE_SPEED 1.50
+# define ZOOM_SPEED 1.05
+# define ROT_SPEED 0.005
 # include "libft/libft.h"
 # include "libft/ft_printf.h"
 # include "libft/get_next_line.h"
@@ -39,7 +48,27 @@ typedef enum e_proj
 {
 	ISO,
 	DIM,
+	PROJ_CNT,
 }	t_proj;
+
+typedef enum e_command
+{
+	MOVE_XP,
+	MOVE_XN,
+	MOVE_YP,
+	MOVE_YN,
+	MOVE_ZP,
+	MOVE_ZN,
+	ROT_XP,
+	ROT_XN,
+	ROT_YP,
+	ROT_YN,
+	ROT_ZP,
+	ROT_ZN,
+	ZOOM_IN,
+	ZOOM_OUT,
+	CMD_CNT,
+}	t_command;
 
 typedef struct s_dim2d
 {
@@ -138,6 +167,7 @@ typedef struct s_trans_data
 	t_fvec3d	offset;
 	double		delta_angle;
 	double		scale;
+	int			autorot;
 }	t_trans_data;
 
 typedef struct s_state_data
@@ -148,6 +178,7 @@ typedef struct s_state_data
 	t_pnt_data		p;
 	t_trans_data	trans;
 	t_proj			proj;
+	int				key[CMD_CNT];
 	void			*mlx_ptr;
 	char			*path;
 	char			*gnl_line;
@@ -156,6 +187,7 @@ typedef struct s_state_data
 
 // init
 void			init_model(t_state_data *state);
+void			init_trans(t_state_data *state);
 void			center_norm_model(t_state_data *state);
 void			get_map_dim(t_state_data *state);
 
@@ -185,8 +217,13 @@ double			rad_to_deg(double rad);
 // loop
 void			draw(t_state_data *state);
 int				handle_key_press(int keycode, void *param);
+int				handle_key_release(int keycode, void *param);
+int				use_input(t_state_data *state);
 int				render(void *data);
 int				call_exit(void *param);
+void			apply_zoom(t_state_data *state);
+void			apply_translation(t_state_data *state);
+void			apply_rotation(t_state_data *state);
 
 // exiting
 void			handle_exit(t_state_data *state, int exit_status,

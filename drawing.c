@@ -6,14 +6,14 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 21:14:20 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 13:27:38 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 22:08:16 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 inline static int	is_on_screen(t_dim2d img, int x, int y);
-inline static int	both_off_screen(t_state_data *state, unsigned int ind1,
+static int	both_off_screen(t_state_data *state, unsigned int ind1,
 		unsigned int ind2);
 inline static unsigned int	get_color(double z);
 static void	make_line(t_state_data *state, unsigned int ind1,
@@ -33,10 +33,6 @@ void	draw(t_state_data *state)
 	i = 0;
 	while (i < state->map.size)
 	{
-		if (is_on_screen(state->img.dim, state->p.screen.x[i],
-					state->p.screen.y[i]))
-			put_pixel(state, state->p.screen.x[i], state->p.screen.y[i],
-				get_color(state->p.model.z[i]));
 		if (i % state->map.dim.width + 1 < state->map.dim.width
 				&& !both_off_screen(state, i, i + 1))
 			make_line(state, i, i + 1);
@@ -45,6 +41,11 @@ void	draw(t_state_data *state)
 			make_line(state, i, i + state->map.dim.width);
 		i++;
 	}
+	i--;
+	if (is_on_screen(state->img.dim, state->p.screen.x[i],
+				state->p.screen.y[i]))
+		put_pixel(state, state->p.screen.x[i], state->p.screen.y[i],
+			get_color(state->p.model.z[i]));
 	mlx_put_image_to_window(state->mlx_ptr, state->win.ptr,
 		state->img.ptr, state->img.offset_to_win.x,
 		state->img.offset_to_win.y);
@@ -120,7 +121,7 @@ static void	draw_vline(t_state_data *state, unsigned int ind, t_vec2d delta,
 			put_pixel(state, pix.x, pix.y, 0x00ffffff);
 		pix.y += step.y;
 		acc += 2 * delta.x * step.x;
-			if (acc > delta.y * step.y)
+		if (acc > delta.y * step.y)
 		{
 			pix.x += step.x;
 			acc -= 2 * delta.y * step.y;
@@ -144,7 +145,6 @@ inline static void put_pixel(t_state_data *state, int x, int y,
 	*(unsigned int *)(state->img.buf + i) = color;
 }
 
-// maybe add this check before drawing lines that are unnecessary.
 static int	both_off_screen(t_state_data *state, unsigned int ind1,
 		unsigned int ind2)
 {
