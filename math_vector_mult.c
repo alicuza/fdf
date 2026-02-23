@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:34:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:39:49 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 07:34:22 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	p_soa_trs_mult_3d(t_fvec3d_arr *p0, t_fvec3d_arr *p1, size_t size,
 	}
 }
 
-void	p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1, size_t size,
+void	p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_vec2d_arr *p1, size_t size,
 		t_mat4 m)
 {
 	size_t		i;
@@ -65,10 +65,10 @@ void	p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1, size_t size,
 	i = 0;
 	while (i < size)
 	{
-		p1->x[i] = p0->x[i] * m.pos[0] + p0->y[i] * m.pos[1]
-			+ p0->z[i] * m.pos[2] + m.pos[3];
-		p1->y[i] = p0->x[i] * m.pos[4] + p0->y[i] * m.pos[5]
-			+ p0->z[i] * m.pos[6] + m.pos[7];
+		p1->x[i] = (int)(p0->x[i] * m.pos[0] + p0->y[i] * m.pos[1]
+			+ p0->z[i] * m.pos[2] + m.pos[3]);
+		p1->y[i] = (int)(p0->x[i] * m.pos[4] + p0->y[i] * m.pos[5]
+			+ p0->z[i] * m.pos[6] + m.pos[7]);
 		i++;
 	}
 }

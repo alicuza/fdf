@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/22 21:58:17 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 08:23:37 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ typedef struct s_fvec2d
 	double	y;
 }	t_fvec2d;
 
+typedef struct s_vec2d_arr
+{
+	int	*x;
+	int	*y;
+}	t_vec2d_arr;
+
 typedef struct s_fvec2d_arr
 {
 	double	*x;
@@ -96,7 +102,7 @@ typedef struct s_pnt_data
 {
 	t_fvec3d_arr	model;
 	t_fvec3d_arr	world;
-	t_fvec2d_arr	screen;
+	t_vec2d_arr		screen;
 }	t_pnt_data;
 
 typedef struct s_img_data
@@ -165,7 +171,7 @@ t_quat			quat_mult(t_quat q1, t_quat q2);
 t_quat			quat_norm(t_quat q);
 void			p_soa_trs_mult_3d(t_fvec3d_arr *p0, t_fvec3d_arr *p1,
 					size_t size, t_mat4 m);
-void			p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_fvec2d_arr *p1,
+void			p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_vec2d_arr *p1,
 					size_t size, t_mat4 m);
 t_fvec3d		vec_norm(t_fvec3d v);
 t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len);
