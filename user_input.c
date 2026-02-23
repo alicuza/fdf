@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 09:50:01 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 22:27:57 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 23:34:52 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ void	apply_zoom(t_state_data *state)
 
 inline static void	get_rotation(t_state_data *state, t_fvec3d axis)
 {
-	state->trans.rot =
-		quat_norm(quat_mult(quat_from_aa(ROT_SPEED, axis), state->trans.rot));
+	state->trans.rot = quat_norm(quat_mult(quat_from_aa(ROT_SPEED, axis),
+				state->trans.rot));
 }
 
 void	apply_rotation(t_state_data *state)

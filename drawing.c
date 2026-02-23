@@ -6,24 +6,24 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 21:14:20 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 22:08:16 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 23:34:11 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 inline static int	is_on_screen(t_dim2d img, int x, int y);
-static int	both_off_screen(t_state_data *state, unsigned int ind1,
-		unsigned int ind2);
+static int		both_off_screen(t_state_data *state,
+		unsigned int ind1, unsigned int ind2);
 inline static unsigned int	get_color(double z);
 static void	make_line(t_state_data *state, unsigned int ind1,
 		unsigned int ind2);
-static void	draw_hline(t_state_data *state, unsigned int ind, t_vec2d delta,
-		t_vec2d step);
-static void	draw_vline(t_state_data *state, unsigned int ind, t_vec2d delta,
-		t_vec2d step);
+static void	draw_hline(t_state_data *state, unsigned int ind,
+		t_vec2d delta, t_vec2d step);
+static void	draw_vline(t_state_data *state, unsigned int ind,
+		t_vec2d delta, t_vec2d step);
 inline static void	put_pixel(t_state_data *state, int x, int y,
-		unsigned int color);
+	unsigned int color);
 
 void	draw(t_state_data *state)
 {
@@ -34,16 +34,16 @@ void	draw(t_state_data *state)
 	while (i < state->map.size)
 	{
 		if (i % state->map.dim.width + 1 < state->map.dim.width
-				&& !both_off_screen(state, i, i + 1))
+			&& !both_off_screen(state, i, i + 1))
 			make_line(state, i, i + 1);
 		if (i / state->map.dim.width + 1 < state->map.dim.height
-				&& !both_off_screen(state, i, i + state->map.dim.width))
+			&& !both_off_screen(state, i, i + state->map.dim.width))
 			make_line(state, i, i + state->map.dim.width);
 		i++;
 	}
 	i--;
 	if (is_on_screen(state->img.dim, state->p.screen.x[i],
-				state->p.screen.y[i]))
+		state->p.screen.y[i]))
 		put_pixel(state, state->p.screen.x[i], state->p.screen.y[i],
 			get_color(state->p.model.z[i]));
 	mlx_put_image_to_window(state->mlx_ptr, state->win.ptr,
@@ -136,7 +136,7 @@ inline static unsigned int	get_color(double z)
 	return (0x00ffffff);
 }
 
-inline static void put_pixel(t_state_data *state, int x, int y,
+inline static void	put_pixel(t_state_data *state, int x, int y,
 		unsigned int color)
 {
 	int	i;
@@ -149,9 +149,9 @@ static int	both_off_screen(t_state_data *state, unsigned int ind1,
 		unsigned int ind2)
 {
 	return ((state->p.screen.x[ind1] < 0 && state->p.screen.x[ind2] < 0)
-			|| (state->p.screen.x[ind1] >= (int)state->img.dim.width
-				&& state->p.screen.x[ind2] >= (int)state->img.dim.width)
-			|| (state->p.screen.y[ind1] < 0 && state->p.screen.y[ind2] < 0)
-			|| (state->p.screen.y[ind1] >= (int)state->img.dim.height
-				&& state->p.screen.y[ind2] >= (int)state->img.dim.height));
+		|| (state->p.screen.x[ind1] >= (int)state->img.dim.width
+			&& state->p.screen.x[ind2] >= (int)state->img.dim.width)
+		|| (state->p.screen.y[ind1] < 0 && state->p.screen.y[ind2] < 0)
+		|| (state->p.screen.y[ind1] >= (int)state->img.dim.height
+			&& state->p.screen.y[ind2] >= (int)state->img.dim.height));
 }
