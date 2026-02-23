@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 09:58:49 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/19 12:55:01 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 13:26:20 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	model_to_world(t_state_data *state)
 
 	state->trans.delta_angle = 0.0005;
 	state->trans.axis = (t_fvec3d){0, 0, 1};
+	state->trans.scale = 300;
 	if (fabs(state->trans.delta_angle) >= EPSILON)
 	{
 		delta_q = quat_from_aa(state->trans.delta_angle, state->trans.axis);

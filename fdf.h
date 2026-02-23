@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 08:23:37 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 11:02:10 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ typedef enum e_proj
 
 typedef struct s_dim2d
 {
-	int	width;
-	int	height;
+	unsigned int	width;
+	unsigned int	height;
 }	t_dim2d;
 
 typedef struct s_vec2d

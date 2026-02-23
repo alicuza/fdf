@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:34:18 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:38:36 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 12:33:21 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_mat4	mat_iso(void)
 	t_mat4	res;
 
 	res.pos[0] = M_SQRT1_2;
-	res.pos[1] = -M_SQRT1_3;
+	res.pos[1] = -M_SQRT1_2;
 	res.pos[2] = 0.0;
 	res.pos[3] = IMG_SIZE_X / 2.0;
 	res.pos[4] = M_SQRT1_6;

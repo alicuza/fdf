@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:06:09 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:10:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 11:02:41 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static int	arr_len(char **str_arr)
 
 static void	arr_dim(t_state_data *state, char *line)
 {
-	char	**split_line;
-	int		line_len;
+	char			**split_line;
+	unsigned int	line_len;
 
 	split_line = ft_split(line, ' ');
 	if (!split_line)

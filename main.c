@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:32:43 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 13:23:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	init_trans(t_state_data *state)
 	state->trans.delta_angle = 0.0;
 	state->trans.offset = (t_fvec3d){0, 0, 0};
 	state->trans.axis = (t_fvec3d){0, 1, 0};
-	state->trans.scale = (double)min(IMG_SIZE_X, IMG_SIZE_Y) * 0.35;
+	state->trans.scale = (double)min(IMG_SIZE_X, IMG_SIZE_Y) * 0.50;
 }
 
 static void	init_dim(t_state_data *state)
@@ -33,7 +33,6 @@ static void	init_dim(t_state_data *state)
 	state->img.dim = (t_dim2d){IMG_SIZE_X, IMG_SIZE_Y};
 	state->img.offset_to_win.x = (WIN_SIZE_X - IMG_SIZE_X) * 0.5;
 	state->img.offset_to_win.y = (WIN_SIZE_Y - IMG_SIZE_Y) * 0.5;
-	state->img.size = IMG_SIZE_X * IMG_SIZE_Y * sizeof(unsigned int);
 }
 
 static void	init_state(t_state_data *state, char *path)
@@ -59,6 +58,7 @@ static void	init_state(t_state_data *state, char *path)
 			&state->img.size_line, &state->img.endian);
 	if (!state->img.buf)
 		handle_exit(state, EXIT_FAILURE, "prep_drawing");
+	state->img.size = state->img.dim.height * state->img.size_line;
 	init_trans(state);
 }
 

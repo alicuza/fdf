@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 17:11:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 12:39:07 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static void	alloc_points(t_state_data *state)
 	state->p.world.x = ft_calloc(state->map.size, sizeof(double));
 	state->p.world.y = ft_calloc(state->map.size, sizeof(double));
 	state->p.world.z = ft_calloc(state->map.size, sizeof(double));
-	state->p.screen.x = ft_calloc(state->map.size, sizeof(double));
-	state->p.screen.y = ft_calloc(state->map.size, sizeof(double));
+	state->p.screen.x = ft_calloc(state->map.size, sizeof(int));
+	state->p.screen.y = ft_calloc(state->map.size, sizeof(int));
 	if (!state->p.model.x || !state->p.model.y || !state->p.model.z
 		|| !state->p.world.x || !state->p.world.y || !state->p.world.z
 		|| !state->p.screen.x || !state->p.screen.y)
@@ -56,7 +56,7 @@ static void	parse_row(t_state_data *state, int row)
 
 void	init_model(t_state_data *state)
 {
-	int	i;
+	unsigned int	i;
 
 	alloc_points(state);
 	state->fd = open(state->path, O_RDONLY);

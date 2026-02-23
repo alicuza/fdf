@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 17:05:02 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/18 11:23:40 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/23 12:59:20 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	handle_exit(t_state_data *state, int exit_status, const char *caller)
 		mlx_loop_end(state->mlx_ptr);
 		mlx_destroy_display(state->mlx_ptr);
 	}
-	free(state->mlx_ptr);
 	free(state->p.model.x);
 	free(state->p.model.y);
 	free(state->p.model.z);
