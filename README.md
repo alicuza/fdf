@@ -1,70 +1,60 @@
+_This project has been created as part of the 42 curriculum by alicuza._
+
 # fdf — fil de fer
 
-A wireframe renderer for height maps, written in C using MiniLibX.  
-Points on a 2D grid are lifted into 3D space by their z-values, connected by edges, and projected onto the screen with real-time rotation, translation, and zoom.
+## Description
 
-> **Screenshot / demo**
->
-> Add an image or GIF here:
->
-> `![fdf demo](docs/demo.png)`
+fdf is a wireframe renderer for height maps, written in C using MiniLibX (Linux/X11).
+Points on a 2D grid are lifted into 3D space by their z-values, connected by edges,
+and projected onto the screen with real-time rotation, translation, and zoom.
 
 ---
 
-## Features
+## Table of Contents
 
-- Wireframe rendering of grid-based height maps
-- Real-time controls: rotation, translation, zoom
-- Quaternion orientation (stable composition, no gimbal lock)
-- Two projections (live toggle):
-  - Isometric
-  - 2:1 dimetric (game-art style)
-- Cache-friendly point storage (Structure of Arrays / SoA)
-- Two-pass parsing (compute dimensions → allocate once → load)
-- Bresenham line drawing with safe bounds checks
-- Centralized cleanup/error handling via a single exit path
-
-**Planned / Ideas**
-- z-based color gradient
-- per-pixel color interpolation along edges
-- proper line clipping (Cohen–Sutherland / Liang–Barsky)
-
----
-
-## Quick start (Linux)
-
-### Requirements
-- C compiler (clang or gcc) + `make`
-- MiniLibX for Linux (X11)
-- X11 development libs: `libX11` and `libXext` (package names vary by distro)
-- Math library (`-lm`)
-
-### Build
-```bash
-make
-```
-
-### Run
-```bash
-./fdf path/to/map.fdf
-```
+- [Description](#description)
+- [Controls](#controls)
+- [Instructions](#instructions)
+  - [Compilation](#compilation)
+  - [Usage](#usage)
+  - [Map Format](#map-format)
+- [Known Limitations](#known-limitations)
+- [Algorithm and Data Structure](#algorithm-and-data-structure)
+  - [Architecture Overview](#architecture-overview)
+  - [Core Data Structure](#core-data-structure)
+  - [Parsing and Model Initialization](#parsing-and-model-initialization)
+  - [Math](#math)
+    - [Quaternions](#quaternions)
+    - [Rotation Matrix from Quaternion](#rotation-matrix-from-quaternion)
+    - [Transform, Rotate, Scale — TRS Matrix](#transform-rotate-scale--trs-matrix)
+    - [Projections](#projections)
+    - [Vector and Array Normalization](#vector-and-array-normalization)
+  - [The Render Loop](#the-render-loop)
+  - [User Input Handling](#user-input-handling)
+  - [Line Drawing — `Bresenham's Algorithm`](#line-drawing--bresenhams-algorithm)
+  - [Color](#color)
+  - [Error Handling and Cleanup](#error-handling-and-cleanup)
+- [Build](#build)
+- [MLX](#mlx)
+  - [Behaviour](#behaviour)
+  - [X11 Events](#x11-events)
+  - [Relevant Event Type and Mask Codes](#relevant-event-type-and-mask-codes)
+  - [Keysyms](#keysyms)
+- [Resources](#resources)
+  - [Documentation and References](#documentation-and-references)
+  - [AI Usage](#ai-usage)
 
 ---
 
 ## Controls
 
-**Notes**
-- Most controls are **hold**-to-apply every frame.
-- Toggles/resets are **press** once.
-
 ```
 General
 ─────────────────────────────────────────────────
  ESC          quit
- Y            reset transform (press)
- R            toggle auto-rotation (press)
- C            cycle projection (press)
-             Isometric ↔ 2:1 Dimetric
+ Y            reset transform
+ R            toggle auto-rotation
+ C            cycle projection (Isometric ↔ 2:1 Dimetric)
 
 Translation (hold)
 ─────────────────────────────────────────────────
@@ -79,21 +69,44 @@ Rotation (hold)
 
 Scale (hold)
 ─────────────────────────────────────────────────
- + -          zoom in / out
+ - =          zoom in / out
 ─────────────────────────────────────────────────
 ```
 
 ---
 
-## Map format
+## Instructions
 
-- Plain text
-- Whitespace-separated **integers**
-- One row per line
-- **All rows must have the same width**
-- Positive values are peaks, negative values are valleys
+### Compilation
+
+Compile the project by running one of the following `make` commands:
+
+- `make` or `make all` - Compiles `fdf`;
+- `make clean` - Removes object and dependency files;
+- `make fclean` - Additionally removes the binary and the libs;
+- `make re` - Recompiles the entire project from scratch;
+- `make debug` - Compiles with the -g flag for debugging;
+
+### Usage
+
+Run the program with a map file:
+
+```bash
+./fdf path/to/map.fdf
+```
+
+---
+
+### Map Format
+
+- plain text
+- whitespace-separated **integers**
+- one row per line
+- **all rows must have the same width**
+- positive values are peaks, negative values are valleys
 
 Example:
+
 ```text
 0 0 0 0 0
 0 1 2 1 0
@@ -104,68 +117,97 @@ Example:
 
 ---
 
-## Table of Contents
+## Known Limitations
 
-1. [Architecture](#architecture)
-2. [Parsing & Model Initialization](#parsing--model-initialization)
-3. [Math](#math)
-   - [Quaternions](#quaternions)
-   - [Rotation Matrix from Quaternion](#rotation-matrix-from-quaternion)
-   - [Transform, Rotate, Scale — TRS Matrix](#transform-rotate-scale--trs-matrix)
-   - [Projections](#projections)
-   - [Vector & Array Normalization](#vector--array-normalization)
-4. [The Render Loop](#the-render-loop)
-5. [Line Drawing — Bresenham's Algorithm](#line-drawing--bresenhams-algorithm)
-6. [Colors](#colors)
-7. [Error Handling & Cleanup](#error-handling--cleanup)
-8. [Build](#build)
+- **Parsing:** only whitespace-separated integers are supported (no `z,color` tokens).
+- **Clipping:** a full line clipping algorithm is not implemented yet.
+				Edges are skipped only if both endpoints are fully off-screen on the same side,
+				and partially visible edges rely on a per-pixel bounds guard.
+- **Color:** currently fixed to `0x00FFFFFF` (white).
+- **Rotation controls:** incremental rotations are applied in world axes (see quaternion section),
+						 which makes movement appear diagonal from the viewer perspective.
 
 ---
 
-## Architecture
+## Algorithm and Data Structure
 
-The entire mutable program state lives in a single `t_state_data` struct that is passed by pointer almost everywhere.
-This sidesteps the need for global variables and gives one obvious place to look when anything goes wrong.
+### Architecture Overview
+
+The entire mutable program state lives in a single `t_state_data` struct that
+is passed by pointer almost everywhere. This avoids global variables and provides
+a single place to track and clean up every resource.
 
 ```
 t_state_data
-├��─ t_img_data   img        — MiniLibX image buffer
-├── t_win_data   win        — window handle + dimensions
-├── t_map_data   map        — grid width × height, total point count
-├── t_pnt_data   p
-│   ├── t_fvec3d_arr  model  — centred, normalised model-space coords
-│   ├── t_fvec3d_arr  world  — after TRS transform
-│   └── t_vec2d_arr   screen — integer pixel coords after projection
-├── t_trans_data trans       — quaternion rotation, offset, scale, autorot
-├── t_proj       proj        — current projection enum
-├── int[CMD_CNT] key         — live key-state bitmask
-├── void*        mlx_ptr
+├── t_img_data			img		- MiniLibX image buffer
+├── t_win_data			win		- window handle + dimensions
+├── t_map_data			map		- grid width × height, total point count
+├── t_pnt_data			p
+│   ├── t_fvec3d_arr	model	- centered, normalized model-space coords
+│   ├── t_fvec3d_arr	world	- after TRS transform
+│   └── t_vec2d_arr		screen	- integer pixel coords after projection
+├── t_trans_data		trans	- quaternion rotation, offset, scale, autorot
+├── t_proj				proj	- current projection enum
+├── int[CMD_CNT]		key		- live key-state bitmask
+├── void*				mlx_ptr
 └── …fd, path, gnl_line, split_line (all tracked for safe cleanup)
 ```
 
-Points are stored as three separate arrays (Structure of Arrays, SoA) rather than an array of structs.
-This layout keeps each coordinate component contiguous in memory, which is friendlier for the sequential transform loops that touch every element.
-
-**Coordinate spaces**
-- **Model space:** parsed grid coordinates, then centered + normalized
-- **World space:** after TRS (rotation + uniform scale + translation)
-- **Screen space:** after projection + viewport offset to image center
+Points are stored using **Structure of Arrays (SoA)** rather than an
+**Array of Structs (AoS)**, keeping each coordinate component contiguous in memory.
+This is cache-friendly for the tight loops that transform every point each frame.
 
 ---
 
-## Parsing & Model Initialization
+### Core Data Structure
 
-Initialization happens in two passes over the file so that memory only needs to be allocated once.
+The key struct is the state container:
 
-**Pass 1 — `get_map_dim`**  
-Reads every line with `get_next_line`, splits on spaces, and counts valid numeric tokens per row and the total number of rows.
-Every row must have the same width; a mismatch is a fatal error.
-The product $w \times h$ is stored as `map.size` and used for all allocations.
+```c
+typedef struct s_state_data
+{
+	// MiniLibX
+	t_img_data		img;
+	t_win_data		win;
 
-**Pass 2 — `init_model`**  
-Allocates six `double` arrays (model x/y/z, world x/y/z) and two `int` arrays (screen x/y) each of length `map.size`.
-Then reads the file again line by line, splitting each row and converting tokens with `ft_atoi`.
-Grid coordinates are assigned directly:
+	// Map and points
+	t_map_data		map;
+	t_pnt_data		p;
+
+	// Transform and projection
+	t_trans_data	trans;
+	t_proj			proj;
+
+	// Input
+	int				key[CMD_CNT];
+
+	// Tracked resources for safe cleanup
+	void			*mlx_ptr;
+	int				fd;
+	char			*path;
+	char			*gnl_line;
+	char			**split_line;
+}	t_state_data;
+```
+
+---
+
+### Parsing and Model Initialization
+
+Initialization happens in two passes over the file so that memory only needs
+to be allocated once.
+
+1. **Pass 1 — `get_map_dim`**
+- reads every line with `get_next_line`
+- splits on whitespace
+- counts valid numeric tokens per row and the total number of rows
+- verifies all rows share the same width (mismatch is a fatal error)
+
+2. **Pass 2 — `init_model`**
+- allocates six `double` arrays (model x/y/z, world x/y/z) and
+  two `int` arrays (screen x/y), all of length `map.size`
+- reads the file again and converts tokens with `ft_atoi`
+- assigns grid coordinates directly:
 
 ```c
 model.x[i + row * width] = (double)column;
@@ -175,22 +217,27 @@ model.z[i + row * width] = (double)parsed_value;
 
 After parsing, `center_norm_model` is called:
 
-- The centroid is subtracted from every point so the model is centred at the origin.
-  - $x$ and $y$ use grid midpoints.
-  - $z$ uses the midpoint of $\min(z)$ and $\max(z)$.
-- `vec_soa_norm` divides every coordinate by a single global magnitude so the model fits in a unit bound.
-  This makes the initial scale setting ($0.5 \cdot \min(\text{win\_w}, \text{win\_h})$) produce a predictably sized image.
+- the model is centered at the origin by subtracting a centroid.
+  (`x` & `y` use grid midpoints, `z` uses the midpoint of `min` and `max z`)
+- `vec_soa_norm` divides every coordinate by a single global magnitude so the
+  model fits a consistent unit bound.
+
+This makes the initial scale setting (`0.5 * min(window width, window height)`)
+produce predictable results across maps.
 
 ---
 
-## Math
+### Math
 
-### Quaternions
+#### Quaternions
 
-Quaternions represent orientation because they compose cleanly (no gimbal lock), are cheap to normalize, and convert directly to a rotation matrix.
+Quaternions represent orientation because they compose cleanly, avoid gimbal lock,
+and convert directly to a rotation matrix.
 
-A quaternion is $q = (w, x, y, z)$ where $w$ is the scalar part and $(x, y, z)$ is the vector part.  
-Using the basis identities $i^2 = j^2 = k^2 = ijk = -1$, quaternion multiplication is:
+A quaternion is $q = (w, x, y, z)$ where $w$ is the scalar component and
+$(x, y, z)$ is the vector component.
+
+Quaternion multiplication is:
 
 $$
 q_1 q_2 =
@@ -202,47 +249,45 @@ w_1z_2 + x_1y_2 - y_1x_2 + z_1w_2
 \right).
 $$
 
-Quaternion multiplication is non-commutative: $q_1q_2 \ne q_2q_1$.
+Multiplication is non-commutative: $q_1q_2 \ne q_2q_1$.
 
-In this project the new incremental rotation is multiplied on the **left** of the accumulated rotation:
+In this project, incremental rotations are multiplied on the **left**
+of the accumulated rotation:
 
 ```c
 state->trans.rot = quat_norm(quat_mult(quat_from_aa(ROT_SPEED, axis),
-                                       state->trans.rot));
+				       state->trans.rot));
 ```
 
-This applies controls around **fixed world axes** (camera-like), which keeps keybindings intuitive.
+This applies rotations around **fixed world axes**. The model moves correctly
+along the axes, but the viewer sees it moving diagonally, because the usual
+movement controls assume a perspective from inside the world, not from outside.
 
-**Axis-angle → quaternion**  
-To rotate by angle $\theta$ around unit axis $\hat{\mathbf{n}}$:
+**Axis-angle to quaternion**
+Rotate by angle $\theta$ around unit axis $\hat{\mathbf{n}}$:
 
 $$
 q = \left(\cos\frac{\theta}{2},\; \hat{\mathbf{n}} \sin\frac{\theta}{2}\right).
 $$
 
-```c
-t_quat quat_from_aa(double rad, t_fvec3d axis)
-{
-    axis = vec_norm(axis);
-    double s = sin(rad / 2.0);
-    return (t_quat){ cos(rad / 2.0), axis.x * s, axis.y * s, axis.z * s };
-}
-```
-
-**Normalization**  
-To prevent floating-point drift, the quaternion is renormalized after each composition.
+**Normalization**
+To prevent floating point drift:
 
 $$
 \lVert q \rVert = \sqrt{w^2 + x^2 + y^2 + z^2}, \qquad \hat{q} = \frac{q}{\lVert q \rVert}.
 $$
 
-A unit quaternion encodes a pure rotation (no scaling).
+**Planned improvement**
+For user input, the incremental rotation always uses the same constant `delta_angle`
+and one of the 6 unit axes ($\pm x$, $\pm y$, $\pm z$). This means the corresponding
+quaternions do not need to be recomputed every frame: a precomputed quaternion for
+each direction can be stored once and then reused in the render loop.
 
 ---
 
-### Rotation Matrix from Quaternion
+#### Rotation Matrix from Quaternion
 
-A unit quaternion $q = (w, x, y, z)$ expands to the following $3 \times 3$ rotation matrix:
+A unit quaternion $q = (w, x, y, z)$ expands to:
 
 $$
 R =
@@ -253,13 +298,15 @@ R =
 \end{bmatrix}.
 $$
 
-No trigonometric calls are needed during rendering: $\sin$/$\cos$ are computed once in `quat_from_aa`, then $R$ is built from products of stored components.
+No trig calls are needed at render time: `sin`/`cos` happen in `quat_from_aa`,
+and the matrix is built from products of stored components.
 
 ---
 
-### Transform, Rotate, Scale — TRS Matrix
+#### Transform, Rotate, Scale — TRS Matrix
 
-Model-to-world combines rotation, **uniform scale**, and translation in a single $4 \times 4$ matrix:
+Model-to-world is a single $4 \times 4$ matrix combining rotation,
+uniform scale, and translation:
 
 $$
 \mathrm{TRS} =
@@ -269,20 +316,7 @@ R s & \mathbf{t} \\
 \end{bmatrix}.
 $$
 
-Applying it to a point $(x, y, z)$ in homogeneous coordinates:
-
-$$
-\begin{bmatrix}
-x' \\ y' \\ z' \\ 1
-\end{bmatrix}
-=
-\mathrm{TRS}
-\begin{bmatrix}
-x \\ y \\ z \\ 1
-\end{bmatrix}.
-$$
-
-The inner loop in `p_soa_trs_mult_3d` avoids building the homogeneous coordinate explicitly and treats the translation column as an additive offset:
+In the tight SoA loop, translation is added as an offset:
 
 ```c
 p1->x[i] = p0->x[i]*m.pos[0]  + p0->y[i]*m.pos[1]  + p0->z[i]*m.pos[2]  + m.pos[3];
@@ -290,170 +324,226 @@ p1->y[i] = p0->x[i]*m.pos[4]  + p0->y[i]*m.pos[5]  + p0->z[i]*m.pos[6]  + m.pos[
 p1->z[i] = p0->x[i]*m.pos[8]  + p0->y[i]*m.pos[9]  + p0->z[i]*m.pos[10] + m.pos[11];
 ```
 
-The matrix is stored in row-major order: element `[i + 4*j]` is row $j$, column $i$.
-
 ---
 
-### Projections
+#### Projections
 
-Both projections are applied as linear maps from world space to screen space, then pixel coordinates are computed via `round()` and a viewport offset so $(0,0)$ maps to the image center.
+Projection is applied to world coordinates using a $4 \times 4$ projection matrix,
+then rounded to integer pixels with a viewport offset so the origin maps to the image center.
+
+**Matrix notation**
+This project uses **column-major notation**. That means:
+- $x$ is the **column number**
+- $y$ denotes the **row number**
+- a point is a column vector and is transformed as $\mathbf{s} = P\mathbf{p}$
+
+A point is treated as a homogeneous vector:
+
+$$
+\mathbf{p} = \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix}, \qquad
+\mathbf{s} = P \mathbf{p}
+$$
+
+and the final 2D pixel coordinates are:
+
+$$
+x_{pix} = \mathrm{round}(s_x) + \frac{w_{win}}{2}, \qquad
+y_{pix} = \mathrm{round}(s_y) + \frac{h_{win}}{2}.
+$$
+
+The projection matrix is kept as $4 \times 4$ to reuse the same matrix-vector
+multiplication path as TRS, even though only the first two rows are used for
+screen-space coordinates.
 
 **Isometric**
 
-True isometric projection views the scene along $(1,1,1)$. One convenient orthonormal basis is:
+$$
+P_{iso} =
+\begin{bmatrix}
+\sqrt{\frac12} & -\sqrt{\frac12} & 0 & 0 \\
+\sqrt{\frac16} & \sqrt{\frac16} & -\sqrt{\frac23} & 0 \\
+0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+$$
 
 $$
-\mathbf{r} = \left(\sqrt{\frac12}, -\sqrt{\frac12}, 0\right), \qquad
-\mathbf{u} = \left(\sqrt{\frac16}, \sqrt{\frac16}, -\sqrt{\frac23}\right).
+x_s = x\sqrt{\frac12} - y\sqrt{\frac12}
 $$
 
-Then:
-
 $$
-x_s = x\sqrt{\frac12} - y\sqrt{\frac12},
-$$
-$$
-y_s = x\sqrt{\frac16} + y\sqrt{\frac16} - z\sqrt{\frac23}.
+y_s = x\sqrt{\frac16} + y\sqrt{\frac16} - z\sqrt{\frac23}
 $$
 
 **2:1 Dimetric**
 
-A common game-art approximation where horizontal lines slope at 1:2 pixels:
+$$
+P_{dim} =
+\begin{bmatrix}
+\frac{\sqrt{3}}{2} & -\frac{\sqrt{3}}{2} & 0 & 0 \\
+0.5 & 0.5 & -1.0 & 0 \\
+0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+$$
 
 $$
-x_s = x\frac{\sqrt{3}}{2} - y\frac{\sqrt{3}}{2},
-$$
-$$
-y_s = 0.5x + 0.5y - 1.0z.
+x_s = x\frac{\sqrt{3}}{2} - y\frac{\sqrt{3}}{2}
 $$
 
-Switching projection is live: pressing **C** cycles the enum; the next `render` rebuilds screen coordinates using the new transform.
+$$
+y_s = 0.5x + 0.5y - 1.0z
+$$
+
+Pressing `c` cycles through the projection enum at runtime.
 
 ---
 
-### Vector & Array Normalization
+#### Vector and Array Normalization
 
-`vec_norm` normalizes a single vector $\mathbf{v}$:
-
-$$
-\hat{\mathbf{v}} =
-\begin{cases}
-\mathbf{0}, & \lVert \mathbf{v} \rVert \le \varepsilon \\
-\frac{\mathbf{v}}{\lVert \mathbf{v} \rVert}, & \text{otherwise}
-\end{cases}
-$$
-
-and is used to sanitize rotation axes before computing `quat_from_aa`.
-
-`vec_soa_norm` operates on the entire model at parse time by dividing all coordinates by one global magnitude, preserving shape while guaranteeing the entire model fits a consistent bound.
+`vec_norm` normalizes a single vector to unit length
+ (and returns a zero vector for near-zero magnitudes).
+`vec_soa_norm` normalizes the entire model by dividing all coordinates
+ by one global magnitude, preserving the shape while keeping the whole
+ model inside a consistent unit bound.
 
 ---
 
-## The Render Loop
+### The Render Loop
 
-`mlx_loop_hook` calls `render` on every frame. The call order is:
+`mlx_loop_hook` calls `render` on every frame:
 
 ```
 render()
- ├── apply_zoom()         — multiply scale by ZOOM_SPEED if key held
- ├── apply_translation()  — increment offset vector
- ├── apply_rotation()     — compose new incremental quat into trans.rot
- ├── model_to_world()     — build TRS matrix, transform all model points
- ├── world_to_screen()    — apply projection, round to int pixels
- └── draw()               — Bresenham lines + blit image to window
+ ├── apply_zoom()
+ ├── apply_translation()
+ ├── apply_rotation()
+ ├── model_to_world()
+ ├── world_to_screen()
+ └── draw()
 ```
 
-Key state is tracked as an integer array indexed by the `t_command` enum.
-`handle_key_press` sets `key[cmd] = 1` and `handle_key_release` clears it, so holding a key down produces continuous incremental changes every frame rather than a single step.
+Key state is tracked as an integer array indexed by a command enum:
+- key press sets `key[cmd] = 1`
+- key release clears it
+
+This produces continuous motion while a key is held.
 
 ---
 
-## Line Drawing — Bresenham's Algorithm
+### User Input Handling
 
-Standard Bresenham with a sign-aware accumulator. The steeper axis drives the loop; the shallower axis is advanced when the accumulated error exceeds a threshold.
-
-Decision between x-driven and y-driven loops:
-
-```c
-if (|Δx| >= |Δy|)  draw_hline(...)
-else               draw_vline(...)
-```
-
-Inside `draw_hline`:
+User input is tracked as a key-state bitmask array indexed by a `t_command` enum.
+This avoids one-off key callbacks and allows smooth continuous motion by applying
+small deltas each frame while a key is held.
 
 ```c
-while (i < |Δx|)
+typedef enum e_command
 {
-    put_pixel(x, y, color);
-    x += sign.x;
-    acc += 2 * |Δy|;
-    if (acc > |Δx|)
-    {
-        y += sign.y;
-        acc -= 2 * |Δx|;
-    }
-}
+	MOVE_XP,
+	MOVE_XN,
+	MOVE_YP,
+	MOVE_YN,
+	MOVE_ZP,
+	MOVE_ZN,
+	ROT_XP,
+	ROT_XN,
+	ROT_YP,
+	ROT_YN,
+	ROT_ZP,
+	ROT_ZN,
+	ZOOM_IN,
+	ZOOM_OUT,
+	CMD_CNT,
+}	t_command;
 ```
 
-All arithmetic stays in integers (no division, no floats).
+Event handlers only update the state and then the render loop modifies the corresponding
+values in the transformation struct, subsequently used to compute the TRS matrix.
 
-**Clipping / bounds safety**
-- Coarse rejection via `both_off_screen` (skip lines fully outside on one side)
-- Per-pixel `is_on_screen` guard for partially visible lines
+#### Key to command mapping (makeshift lookup table)
+
+The key press/release hooks receive a keysym (from `<X11/keysym.h>`).
+In order to use a stable indexing scheme, keysyms are mapped to commands
+through a small lookup table.
+
+Conceptually:
+
+```c
+typedef struct s_keymap
+{
+	int			keysym;
+	t_command		cmd;
+}	t_keymap;
+
+/*
+	{XK_w, MOVE_YP}, {XK_s, MOVE_YN}, ...
+*/
+
+t_command	keysym_to_cmd(int keysym);
+```
+
+The press/release handlers do:
+
+- `cmd = keysym_to_cmd(keysym)`
+- if `cmd` is valid: `state->key[cmd] = 1` on press, `0` on release
+- if the keysym is not mapped: it is ignored (a sentinel value `CMD_CNT`)
+
+#### Continuous input in the render loop
+
+Each frame reads the key array and applies small increments:
+
+- translation: adds/subtracts a constant to `trans.offset`
+- rotation: composes a new incremental quaternion
+- zoom: multiplies/divides `trans.scale`
+
+This keeps the behaviour consistent across all commands, and avoids having long
+`if (keysym == ...)` chains inside the frame loop.
+
+Toggle commands (projection cycling, autorotation) are handled as edge-triggered
+events inside the key press handler to avoid repeats.
 
 ---
 
-## Colors
+### Line Drawing — `Bresenham's Algorithm`
+
+Standard Bresenham with sign-aware accumulator:
+- if $|\Delta x| \ge |\Delta y|$
+	- the x-coordinate iterates through the loop (`draw_hline`)
+	- otherwise y iterates through it (`draw_vline`)
+
+All arithmetic stays in integers, which is the biggest advantage.
+
+**Clipping**
+A full clipping algorithm is not implemented. Instead:
+- edges with both endpoints fully off-screen on the same side are skipped
+- partially visible edges are rasterized with a per-pixel bounds guard
+
+This prevents out-of-bounds writes while keeping the implementation small.
+I am planning on implementing the `Liang–Barsky line-clipping algorithm`
+at a future date.
+
+---
+
+### Color
 
 Color is currently fixed at `0x00FFFFFF` (white) for all pixels.
 
-**Planned: z-based gradient**
-
-`get_color(double z)` receives model-space $z$ normalized to $[-1, 1]$. Remap and lerp:
-
-$$
-t = \frac{z + 1}{2} \in [0,1]
-$$
-
-$$
-\mathbf{c}(t) = \mathbf{c}_{low} + t(\mathbf{c}_{high} - \mathbf{c}_{low})
-$$
-
-Then pack to `0xRRGGBB`.
-
-**Planned: per-pixel interpolation**
-
-In Bresenham, an approximate parametric position is already available as $t \approx i/|\Delta x|$ (or $i/|\Delta y|$), so:
-
-$$
-z(t) = z_0 + t(z_1 - z_0)
-$$
-
-and `get_color(z(t))` can be evaluated per pixel.
-
 ---
 
-## Error Handling & Cleanup
+### Error Handling and Cleanup
 
 `handle_exit` is the single exit point for both normal and error paths:
+- destroys MiniLibX resources
+- frees all point arrays
+- closes the fd if open
+- frees `get_next_line` buffers and split arrays
+- flushes `get_next_line` static storage via `get_next_line(-255)`
+- prints errors via `perror(caller)` on failure
+- exits with the given status code
 
-```c
-void handle_exit(t_state_data *state, int exit_status, const char *caller)
-{
-    // destroy MiniLibX resources in order
-    // free all point arrays
-    // close fd if open
-    // free gnl_line and split_line
-    // flush get_next_line buffer with fd -255
-    // perror(caller) on failure
-    // exit(exit_status)
-}
-```
-
-Every heap allocation and open file descriptor is tracked in `t_state_data`.
-A zero-initialized state struct means unallocated pointers are `NULL` and the fd starts at `-1`, so cleanup checks are safe.
-
-`get_next_line(-255)` flushes any internal static buffer that `get_next_line` may hold, preventing a leak on early exit mid-parse.
+Every allocation and the opened fd are tracked in `t_state_data`,
+so cleanup is safe even on partial initialization.
 
 ---
 
@@ -464,9 +554,106 @@ make        # build fdf
 make clean  # remove object files
 make fclean # remove object files and binary
 make re     # fclean + make
+make debug  # build with -g flag
 ```
 
 **Dependencies**
 - MiniLibX (Linux, X11)
 - libft (bundled)
 - `-lm`, `-lX11`, `-lXext`
+
+---
+
+## MLX
+
+- is a wrapper for the X11 and Xext API
+
+### Behaviour
+
+- not documented properly in the man pages:
+	- the `mlx_ptr` needs to be freed.
+	- the hook needed for closing the display by clicking on the x is
+	  `mlx_hook`, a generic hook, which takes X11 Event(Type)s and Masks.
+	- the window close button sends a `DestroyNotify (17)` event.
+	  handling it requires registering a hook such as
+	  `mlx_hook(win, DestroyNotify, StructureNotifyMask, ...)`.
+
+---
+
+### X11 Events
+
+The common Types are bold and have the corresponding code in brackets:
+
+| Event Category | Event Type (Codes) |
+| :-- | :-- |
+| Keyboard Events | **KeyPress (2)**, **KeyRelease (3)** |
+| Pointer events | **ButtonPress (4)**, **ButtonRelease (5)**, **MotionNotify (6)** |
+| Exposure events | **Expose (12)** |
+| Window state notification events | DestroyNotify, ConfigureNotify, MapNotify, UnmapNotify |
+| **Client communication events** | **ClientMessage (33)** |
+
+### Relevant Event Type and Mask Codes
+
+Taken from `/usr/include/X11/X.h`
+
+```c
+#define KeyPressMask			(1L<<0)
+#define KeyReleaseMask			(1L<<1)
+#define StructureNotifyMask		(1L<<17)
+
+#define KeyPress				2
+#define KeyRelease				3
+#define DestroyNotify			17
+#define ClientMessage			33
+```
+
+### Keysyms
+
+Full list in `/usr/include/X11/keysymdef.h`
+
+Headers used:
+- `<X11/X.h>`
+- `<X11/keysym.h>`
+
+Some keysyms used in this project:
+
+```c
+#define XK_Escape		0xff1b
+
+#define XK_minus		0x002d
+#define XK_equal		0x003d
+
+#define XK_w			0x0077
+#define XK_a			0x0061
+#define XK_s			0x0073
+#define XK_d			0x0064
+#define XK_q			0x0071
+#define XK_e			0x0065
+```
+
+---
+
+## Resources
+
+### Documentation and References
+
+- [World, View, Projection matrices](https://www.codinglabs.net/article_world_view_projection_matrix.aspx) - world/view/projection decomposition and matrix multiplication order;
+- [Understanding Quaternions](https://www.3dgep.com/understanding-quaternions/) - quaternion intuition, axis-angle conversion, and rotation matrices;
+- [Quaternions (gltut, Tut08)](https://paroj.github.io/gltut/Positioning/Tut08%20Quaternions.html) - quaternion derivations and practical usage patterns;
+- [Memory Layout Transformations (AoS vs SoA)](https://www.intel.com/content/www/us/en/developer/articles/technical/memory-layout-transformations.html) - why SoA is useful for large sequential transform loops;
+- [Bresenham's line algorithm](https://www.geeksforgeeks.org/dsa/bresenhams-line-generation-algorithm/) - integer line rasterization;
+- [MiniLibX](https://github.com/42Paris/minilibx-linux) - MLX implementation sources (necessary when man pages are incomplete);
+
+**X11**
+- [Xlib Programming Manual](https://tronche.com/gui/x/xlib/events/) - reference for Xlib events and masks (useful when using `mlx_hook`);
+- [X11 keysyms](https://www.cl.cam.ac.uk/~mgk25/ucs/keysyms.txt) - overview of keysyms and their values;
+
+**Other useful references**
+- [Liang–Barsky line clipping](https://en.wikipedia.org/wiki/Liang%E2%80%93Barsky_algorithm) - planned rectangle line clipping algorithm;
+
+### AI Usage
+
+AI tools were used in the following ways during this project:
+- brainstorming how to structure documentation and explain math clearly;
+- clarifying projection math and quaternion identities;
+- drafting and refactoring README text;

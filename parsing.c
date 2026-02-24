@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/24 12:46:11 by knajmech         ###   ########.fr       */
+/*   Updated: 2026/02/24 20:50:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ static void	alloc_points(t_state_data *state)
 
 static void	parse_row(t_state_data *state, int row)
 {
-	unsigned int	i;
-	int				ind;
+	int			i;
+	int			ind;
 
 	state->split_line = ft_split(state->gnl_line, ' ');
 	if (!state->split_line)
 		handle_exit(state, EXIT_FAILURE, "parse_row");
 	i = 0;
-	while (i < state->map.dim.width)
+	while (state->split_line[i])
 	{
 		ind = i + row * state->map.dim.width;
 		state->p.model.x[ind] = (double)i;
@@ -116,20 +116,3 @@ void	center_norm_model(t_state_data *state)
 	}
 	state->p.model = vec_soa_norm(state->p.model, state->map.size);
 }
-
-/* pretty sure it is redundant, because this happens on the first mlx_loop_hook
-
-void	init_world(t_state_data *state)
-{
-	int	i;
-
-	i = 0;
-	while (i < state->map.size)
-	{
-		state->p.world.x[i] = state->p.model.x[i] * state->trans.scale;
-		state->p.world.y[i] = state->p.model.y[i] * state->trans.scale;
-		state->p.world.z[i] = state->p.model.z[i] * state->trans.scale;
-		i++;
-	}
-}
-*/
