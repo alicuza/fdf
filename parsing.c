@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 23:13:38 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/24 12:46:11 by knajmech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ static void	alloc_points(t_state_data *state)
 
 static void	parse_row(t_state_data *state, int row)
 {
-	int			i;
-	int			ind;
+	unsigned int	i;
+	int				ind;
 
 	state->split_line = ft_split(state->gnl_line, ' ');
 	if (!state->split_line)
 		handle_exit(state, EXIT_FAILURE, "parse_row");
 	i = 0;
-	while (state->split_line[i])
+	while (i < state->map.dim.width)
 	{
 		ind = i + row * state->map.dim.width;
 		state->p.model.x[ind] = (double)i;
