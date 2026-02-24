@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 11:52:21 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 21:50:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/24 20:14:43 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	init_trans(t_state_data *state)
 	state->trans.rot = quat_id();
 	state->trans.autorot = 0;
 	state->trans.delta_angle = ROT_SPEED;
-	state->trans.offset = (t_fvec3d){0.0, 0.0, 0.0};
-	state->trans.axis = AXIS_ZP;
+	state->trans.offset = (t_vec3d){0, 0, 0};
+	state->trans.axis = (t_fvec3d){0, 0, 1};
 	state->trans.scale = (double)min(IMG_SIZE_X, IMG_SIZE_Y) * 0.50;
 }
 

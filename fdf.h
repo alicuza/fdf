@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 22:46:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/24 20:17:59 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@
 # define WIN_SIZE_Y 720
 # define IMG_SIZE_X 1280
 # define IMG_SIZE_Y 720
-# define AXIS_XP (t_fvec3d){1, 0, 0}
-# define AXIS_XN (t_fvec3d){-1, 0, 0}
-# define AXIS_YP (t_fvec3d){0, 1, 0}
-# define AXIS_YN (t_fvec3d){0, -1, 0}
-# define AXIS_ZP (t_fvec3d){0, 0, 1}
-# define AXIS_ZN (t_fvec3d){0, 0, -1}
 # define TITLE "sancuta's magical fildefer"
 # define M_SQRT1_3 0.57735026918962576451
 # define M_SQRT1_6 0.40824829046386301636
@@ -107,6 +101,13 @@ typedef struct s_fvec3d_arr
 	double	*z;
 }	t_fvec3d_arr;
 
+typedef struct s_vec3d
+{
+	int	x;
+	int	y;
+	int	z;
+}	t_vec3d;
+
 typedef struct s_fvec3d
 {
 	double	x;
@@ -158,13 +159,11 @@ typedef struct s_map_data
 	size_t	size;
 }	t_map_data;
 
-// delta_angle is in radians;
-
 typedef struct s_trans_data
 {
 	t_quat		rot;
 	t_fvec3d	axis;
-	t_fvec3d	offset;
+	t_vec3d		offset;
 	double		delta_angle;
 	double		scale;
 	int			autorot;
@@ -192,12 +191,12 @@ void			init_trans(t_state_data *state);
 void			center_norm_model(t_state_data *state);
 void			get_map_dim(t_state_data *state);
 
-//math
+// math
 t_mat4			mat4_id(void);
 t_mat4			mat_iso(void);
 t_mat4			mat_21(void);
 t_mat4			mat4_mult(t_mat4 m1, t_mat4 m2);
-t_mat4			generate_trs_mat(t_fvec3d transform, t_quat q, double scale);
+t_mat4			generate_trs_mat(t_vec3d transform, t_quat q, double scale);
 t_quat			quat_id(void);
 t_quat			quat_from_aa(double rad, t_fvec3d axis);
 t_quat			quat_mult(t_quat q1, t_quat q2);
@@ -210,7 +209,7 @@ t_fvec3d		vec_norm(t_fvec3d v);
 t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len);
 int				min(int n1, int n2);
 
-//unused
+// unused
 int				max(int n1, int n2);
 double			deg_to_rad(double deg);
 double			rad_to_deg(double rad);
@@ -225,6 +224,13 @@ int				call_exit(void *param);
 void			apply_zoom(t_state_data *state);
 void			apply_translation(t_state_data *state);
 void			apply_rotation(t_state_data *state);
+int				keycode_to_command(int keycode);
+
+unsigned int	get_color(double z);
+void			put_pixel(t_state_data *state, int x, int y,
+					unsigned int color);
+int				both_off_screen(t_state_data *state, unsigned int ind1,
+					unsigned int ind2);
 
 // exiting
 void			handle_exit(t_state_data *state, int exit_status,

@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 20:09:02 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/24 12:36:55 by knajmech         ###   ########.fr        #
+#    Updated: 2026/02/24 20:16:21 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,10 @@ SRCS =	main.c \
 		error_handling.c \
 		transform_points.c \
 		drawing.c \
-		user_input.c
+		drawing_helpers.c \
+		user_input.c \
+		user_input2.c \
+		handle_user_input.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 17:34:18 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/23 12:33:21 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/24 16:12:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_mat4	mat_21(void)
 	return (res);
 }
 
-t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
+t_mat4	generate_trs_mat(t_vec3d transform, t_quat q, double scale)
 {
 	t_mat4	res;
 
@@ -97,15 +97,15 @@ t_mat4	generate_trs_mat(t_fvec3d transform, t_quat q, double scale)
 	res.pos[0] = (1.0 - 2.0 * (q.y * q.y + q.z * q.z)) * scale;
 	res.pos[1] = (2.0 * (q.x * q.y - q.z * q.w)) * scale;
 	res.pos[2] = (2.0 * (q.x * q.z + q.y * q.w)) * scale;
-	res.pos[3] = transform.x;
+	res.pos[3] = (double)transform.x;
 	res.pos[4] = (2.0 * (q.x * q.y + q.z * q.w)) * scale;
 	res.pos[5] = (1.0 - 2.0 * (q.x * q.x + q.z * q.z)) * scale;
 	res.pos[6] = (2.0 * (q.y * q.z - q.x * q.w)) * scale;
-	res.pos[7] = transform.y;
+	res.pos[7] = (double)transform.y;
 	res.pos[8] = (2.0 * (q.x * q.z - q.y * q.w)) * scale;
 	res.pos[9] = (2.0 * (q.y * q.z + q.x * q.w)) * scale;
 	res.pos[10] = (1.0 - 2.0 * (q.x * q.x + q.y * q.y)) * scale;
-	res.pos[11] = transform.z;
+	res.pos[11] = (double)transform.z;
 	res.pos[12] = 0.0;
 	res.pos[13] = 0.0;
 	res.pos[14] = 0.0;
