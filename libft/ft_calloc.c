@@ -6,13 +6,29 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:39:35 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/20 16:37:54 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/24 12:13:27 by knajmech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <limits.h>
 
-void	*ft_calloc(size_t nmemb, size_t size)
+
+void    *ft_calloc(size_t nmemb, size_t size)
+{
+    char    *ptr;
+
+    if (!nmemb || !size)
+        return (malloc(0));
+    if (nmemb && size > LLONG_MAX / nmemb)
+        return (0);
+    ptr = malloc(size * nmemb);
+    if (!ptr || !nmemb)
+        return (ptr);
+    ft_bzero(ptr, nmemb * size);
+    return (ptr);
+}
+/*void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*res;
 	size_t	total_size;
@@ -31,4 +47,4 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ft_bzero(res, total_size);
 	return (res);
-}
+}*/
