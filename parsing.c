@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:11:12 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/24 22:38:30 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/27 09:58:03 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static void	parse_row(t_state_data *state, int row)
 	i = 0;
 	while (i < state->map.dim.width)
 	{
+		if (!state->split_line[i])
+			handle_exit(state, EXIT_FAILURE, "parse_row");
 		ind = i + row * state->map.dim.width;
 		state->p.model.x[ind] = (double)i;
 		state->p.model.y[ind] = (double)row;

@@ -1,4 +1,4 @@
-_This project has been created as part of the 42 curriculum by alicuza._
+_This project has been created as part of the 42 curriculum by sancuta._
 
 # fdf — fil de fer
 

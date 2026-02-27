@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 21:14:20 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/24 19:59:33 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/27 09:43:38 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,10 @@ void	draw(t_state_data *state)
 			make_line(state, i, i + state->map.dim.width);
 		i++;
 	}
-	i--;
-	if (is_on_screen(state->img.dim, state->p.screen.x[i],
-			state->p.screen.y[i]))
-		put_pixel(state, state->p.screen.x[i], state->p.screen.y[i],
-			get_color(state->p.model.z[i]));
+	if (is_on_screen(state->img.dim, state->p.screen.x[i - 1],
+			state->p.screen.y[i - 1]))
+		put_pixel(state, state->p.screen.x[i - 1], state->p.screen.y[i - 1],
+			get_color(state->p.model.z[i - 1]));
 	mlx_put_image_to_window(state->mlx_ptr, state->win.ptr,
 		state->img.ptr, state->img.offset_to_win.x,
 		state->img.offset_to_win.y);

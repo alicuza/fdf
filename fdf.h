@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 18:03:36 by sancuta           #+#    #+#             */
-/*   Updated: 2026/02/24 20:17:59 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/02/27 09:17:35 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define M_SQRT2_3 0.81649658092772603273
 # define M_SQRT3_HALF 0.86602540378443864676
 # define EPSILON 1e-9
-# define MOVE_SPEED 1.50
+# define MOVE_SPEED 2
 # define ZOOM_SPEED 1.05
 # define ROT_SPEED 0.005
 # include "libft/libft.h"
@@ -208,11 +208,7 @@ void			p_soa_trs_mult_2d(t_fvec3d_arr *p0, t_vec2d_arr *p1,
 t_fvec3d		vec_norm(t_fvec3d v);
 t_fvec3d_arr	vec_soa_norm(t_fvec3d_arr v, size_t len);
 int				min(int n1, int n2);
-
-// unused
 int				max(int n1, int n2);
-double			deg_to_rad(double deg);
-double			rad_to_deg(double rad);
 
 // loop
 void			draw(t_state_data *state);
