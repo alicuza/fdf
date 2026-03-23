@@ -34,7 +34,6 @@ and projected onto the screen with real-time rotation, translation, and zoom.
   - [Line Drawing — `Bresenham's Algorithm`](#line-drawing--bresenhams-algorithm)
   - [Color](#color)
   - [Error Handling and Cleanup](#error-handling-and-cleanup)
-- [Build](#build)
 - [MLX](#mlx)
   - [Behaviour](#behaviour)
   - [X11 Events](#x11-events)
@@ -86,6 +85,12 @@ Compile the project by running one of the following `make` commands:
 - `make fclean` - Additionally removes the binary and the libs;
 - `make re` - Recompiles the entire project from scratch;
 - `make debug` - Compiles with the -g flag for debugging;
+
+**Dependencies**
+- MiniLibX (Linux, X11)
+- libft (bundled)
+- `-lm`, `-lX11`, `-lXext`
+
 
 ### Usage
 
@@ -544,23 +549,6 @@ Color is currently fixed at `0x00FFFFFF` (white) for all pixels.
 
 Every allocation and the opened fd are tracked in `t_state_data`,
 so cleanup is safe even on partial initialization.
-
----
-
-## Build
-
-```bash
-make        # build fdf
-make clean  # remove object files
-make fclean # remove object files and binary
-make re     # fclean + make
-make debug  # build with -g flag
-```
-
-**Dependencies**
-- MiniLibX (Linux, X11)
-- libft (bundled)
-- `-lm`, `-lX11`, `-lXext`
 
 ---
 
